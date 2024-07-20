@@ -35,12 +35,12 @@
 
     <EditText
         android:id="@+id/txtLotNumber"
-        android:layout_width="355dp"
+        android:layout_width="361dp"
         android:layout_height="48dp"
         android:layout_marginTop="36dp"
         android:ems="10"
-        android:inputType="text"
         android:hint="Lot number"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.41"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
     <EditText
         android:id="@+id/txtName"
         android:layout_width="361dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Name"
@@ -60,21 +60,21 @@
 
     <Spinner
         android:id="@+id/dropDownCategory"
-        android:layout_width="360dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.792"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <Spinner
         android:id="@+id/dropDownPeriod"
-        android:layout_width="363dp"
-        android:layout_height="45dp"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintHorizontal_bias="0.792"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dropDownCategory" />
 
@@ -99,6 +99,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/_magnifyingglass" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:text="Category"
+        app:layout_constraintEnd_toStartOf="@+id/dropDownCategory"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="20dp"
+        android:text="Period"
+        app:layout_constraintEnd_toStartOf="@+id/dropDownPeriod"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dropDownPeriod" />
 
     <!--        android:text="Lot number"-->
 <!--        android:background="#80000000"-->
