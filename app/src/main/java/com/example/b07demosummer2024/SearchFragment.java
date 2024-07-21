@@ -80,6 +80,7 @@ public class SearchFragment extends Fragment {
                         return;
                     }
                 }
+
                 String selectedCategory = dropDownCategory.getSelectedItem().toString();
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 

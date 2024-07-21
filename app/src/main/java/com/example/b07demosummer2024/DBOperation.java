@@ -39,6 +39,7 @@ public class DBOperation {
                         System.out.println("Item is null!");
                         continue;
                     }
+
                     if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
                             !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
                         continue;
