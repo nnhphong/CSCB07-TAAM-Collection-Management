@@ -20,6 +20,10 @@ public class DBOperation {
         this.ref = ref;
     }
 
+    public void addItem(Item item) {
+
+    }
+
     public List<Item> searchItem(Item criteria) {
         List<Item> filteredItem = new ArrayList<>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
