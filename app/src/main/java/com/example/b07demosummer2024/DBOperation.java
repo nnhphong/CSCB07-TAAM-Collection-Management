@@ -58,7 +58,7 @@ public class DBOperation {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                System.out.println("WTF");
             }
         });
         return filteredItem;
