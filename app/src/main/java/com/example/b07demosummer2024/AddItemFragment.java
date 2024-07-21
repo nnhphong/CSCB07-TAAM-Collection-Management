@@ -68,14 +68,14 @@ public class AddItemFragment extends Fragment {
 
         itemsRef = db.getReference("categories/" + category);
         String id = itemsRef.push().getKey();
-        Item item = new Item(id, title, author, genre, description);
+//        Item item = new Item(id, title, author, genre, description);
 
-        itemsRef.child(id).setValue(item).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "Item added", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Failed to add item", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        itemsRef.child(id).setValue(item).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Toast.makeText(getContext(), "Item added", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(getContext(), "Failed to add item", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }

@@ -18,9 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.FirebaseDatabase;
+import java.util.List;
+
 import org.w3c.dom.Text;
 
 public class SearchFragment extends Fragment {
+    private FirebaseDatabase db;
+    private DBOperation op;
     public void addDropDownValue(View view, int dropDownID, int arrValuesID) {
         Spinner spinner = view.findViewById(dropDownID);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -36,6 +41,9 @@ public class SearchFragment extends Fragment {
 
         addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
+
+        db = FirebaseDatabase.getInstance();
+        op = new DBOperation(db.getReference());
 
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,20 +63,29 @@ public class SearchFragment extends Fragment {
 
                 String strLotNumber = txtLotNumber.getText().toString();
                 String name = txtName.getText().toString();
-                Integer lotNum;
-                try {
-                    lotNum = Integer.parseInt(strLotNumber);
-                } catch (NumberFormatException e) {
-                    txtStatus.setText("Error: Lot number is not a number");
-                    txtStatus.setTextColor(Color.parseColor("#f54242"));
-                    return;
+                Integer lotNum = null;
+                if (!strLotNumber.isEmpty()) {
+                    try {
+                        lotNum = Integer.parseInt(strLotNumber);
+                    } catch (NumberFormatException e) {
+                        txtStatus.setText("Error: Lot number is not a number");
+                        txtStatus.setTextColor(Color.parseColor("#f54242"));
+                        return;
+                    }
                 }
 
                 String selectedCategory = dropDownCategory.getSelectedItem().toString();
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
-                System.out.println(lotNum + " " + name + " " + selectedCategory + " " + selectedPeriod);
+
+                Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
+                List<Item> result = op.searchItem(item);
+                displayInfo(result);
             }
         });
         return view;
+    }
+
+    private void displayInfo(List<Item> l) {
+
     }
 }

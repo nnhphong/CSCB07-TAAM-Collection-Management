@@ -70,17 +70,17 @@ public class DeleteItemFragment extends Fragment {
                 boolean itemFound = false;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Item item = snapshot.getValue(Item.class);
-                    if (item != null && item.getTitle().equalsIgnoreCase(title)) {
-                        snapshot.getRef().removeValue().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "Item deleted", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getContext(), "Failed to delete item", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        itemFound = true;
-                        break;
-                    }
+//                    if (item != null && item.getTitle().equalsIgnoreCase(title)) {
+//                        snapshot.getRef().removeValue().addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                Toast.makeText(getContext(), "Item deleted", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(getContext(), "Failed to delete item", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                        itemFound = true;
+//                        break;
+//                    }
                 }
                 if (!itemFound) {
                     Toast.makeText(getContext(), "Item not found", Toast.LENGTH_SHORT).show();
