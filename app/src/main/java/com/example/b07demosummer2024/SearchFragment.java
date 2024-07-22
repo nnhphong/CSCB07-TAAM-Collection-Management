@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,7 +49,7 @@ public class SearchFragment extends Fragment {
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        DatabaseReference ref = db.getReference("testDemo");
+        DatabaseReference ref = db.getReference("/data");
         op = new DBOperation(ref);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +84,14 @@ public class SearchFragment extends Fragment {
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 
                 Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
-//                System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
-                List<Item> result = op.searchAndDisplay(item);
-                displayInfo(result);
+                op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Item>> task) {
+                        List<Item> result = task.getResult();
+                        // TODO: displaying search result here
+                        displayInfo(result);
+                    }
+                });
             }
         });
 
@@ -108,7 +115,7 @@ public class SearchFragment extends Fragment {
 
     private void displayInfo(List<Item> l) {
         for (Item item : l) {
-            System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
+            System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
     }
 

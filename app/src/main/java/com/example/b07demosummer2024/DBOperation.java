@@ -4,6 +4,8 @@ import android.provider.ContactsContract;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,45 +26,39 @@ public class DBOperation {
 
     }
 
-    public List<Item> searchAndDisplay(Item criteria) {
+    public Task<List<Item>> searchItem(Item criteria) {
         List<Item> filteredItem = new ArrayList<>();
+        TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot id : snapshot.getChildren()) {
-                    for (DataSnapshot data: id.getChildren()) {
-                        Item item = data.getValue(Item.class);
-                        if (item == null) {
-                            System.out.println("Item is null!");
-                            continue;
-                        }
-//                        System.out.println(criteria.getLotNumber() + " " + item.getLotNumber());
-                        if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
-                                !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
-                            continue;
-                        }
-//                        System.out.println(criteria.getName() + " " + item.getName());
-                        if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
-                                !Objects.equals(criteria.getName(), item.getName())) {
-                            continue;
-                        }
-//                        System.out.println(criteria.getCategory() + " " + item.getCategory());
-                        if (!criteria.getCategory().equals("None") &&
-                                !Objects.equals(criteria.getCategory(), item.getCategory())) {
-                            continue;
-                        }
-//                        System.out.println(criteria.getPeriod() + " " + item.getPeriod());
-                        if (!criteria.getPeriod().equals("None") &&
-                                !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
-                            continue;
-                        }
-                        filteredItem.add(item);
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item == null) {
+                        System.out.println("Item is null!");
+                        continue;
                     }
+                    if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
+                            !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
+                        continue;
+                    }
+                    if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
+                            !Objects.equals(criteria.getName(), item.getName())) {
+                        continue;
+                    }
+                    if (!criteria.getCategory().equals("None") &&
+                            !Objects.equals(criteria.getCategory(), item.getCategory())) {
+                        continue;
+                    }
+                    if (!criteria.getPeriod().equals("None") &&
+                            !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
+                        continue;
+                    }
+                    filteredItem.add(item);
                 }
 
-                for (Item item : filteredItem) {
-                    System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
-                }
+                tcs.setResult(filteredItem);
             }
 
             @Override
@@ -71,7 +67,7 @@ public class DBOperation {
             }
         });
 
-        return filteredItem;
+        return tcs.getTask();
     }
 
     public void removeItem(Item item) {
