@@ -1,11 +1,14 @@
 package com.example.b07demosummer2024;
 
+import android.net.Uri;
+
 public class Item {
     private Integer lot_number;
     private String name;
     private String category;
     private String period;
     private String description;
+    private Uri media;
 
     public Item() {}
 
