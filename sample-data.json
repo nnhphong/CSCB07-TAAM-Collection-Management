@@ -1,0 +1,17 @@
+{
+	"items": [
+		{
+			"lot_number": 1,
+			"name" : "A Tang 'Sancai' 'Baoxianghua' Box",
+			"category" : "Tang",
+			"description": "This tricolor (sancai) box has a round shape with shallow straight walls, a concave circular mouth, a flat base, and a slightly curved lid. The outer surface of the lid is decorated with intricate molded patterns, displaying exquisite and varied designs."
+		},
+		{
+			"lot_number": 2,
+			"name": "A Blue-Glazed Ceramic 'Tiger', Three Kingdoms Period",
+			"category": "Paintings",
+			"period": "Jin",
+			"description": "This blue-glazed ceramic tiger was crafted during the Three Kingdoms Period and originates from the Yue Kiln."
+		}
+	]
+}

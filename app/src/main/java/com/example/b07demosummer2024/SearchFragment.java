@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
@@ -42,8 +43,9 @@ public class SearchFragment extends Fragment {
         addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
 
-        db = FirebaseDatabase.getInstance();
-        op = new DBOperation(db.getReference());
+        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+        DatabaseReference ref = db.getReference("testDemo");
+        op = new DBOperation(ref);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +80,8 @@ public class SearchFragment extends Fragment {
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 
                 Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
-                List<Item> result = op.searchItem(item);
+//                System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
+                List<Item> result = op.searchAndDisplay(item);
                 displayInfo(result);
             }
         });
@@ -86,6 +89,8 @@ public class SearchFragment extends Fragment {
     }
 
     private void displayInfo(List<Item> l) {
-
+        for (Item item : l) {
+            System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
+        }
     }
 }

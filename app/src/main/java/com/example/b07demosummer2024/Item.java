@@ -19,7 +19,7 @@ public class Item {
 
     // Getters and setters
     public Integer getLotNumber() { return this.lot_number; }
-    public void setId(int lot_number) { this.lot_number = lot_number; }
+    public void setLotNumber(Integer lot_number) { this.lot_number = lot_number; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getCategory() { return category; }

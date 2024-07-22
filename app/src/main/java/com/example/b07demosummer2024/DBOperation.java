@@ -24,35 +24,44 @@ public class DBOperation {
 
     }
 
-    public List<Item> searchItem(Item criteria) {
+    public List<Item> searchAndDisplay(Item criteria) {
         List<Item> filteredItem = new ArrayList<>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Item item = data.getValue(Item.class);
-                    if (item == null) {
-                        System.out.println("Item is null!");
-                        continue;
+                for (DataSnapshot id : snapshot.getChildren()) {
+                    for (DataSnapshot data: id.getChildren()) {
+                        Item item = data.getValue(Item.class);
+                        if (item == null) {
+                            System.out.println("Item is null!");
+                            continue;
+                        }
+//                        System.out.println(criteria.getLotNumber() + " " + item.getLotNumber());
+                        if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
+                                !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
+                            continue;
+                        }
+//                        System.out.println(criteria.getName() + " " + item.getName());
+                        if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
+                                !Objects.equals(criteria.getName(), item.getName())) {
+                            continue;
+                        }
+//                        System.out.println(criteria.getCategory() + " " + item.getCategory());
+                        if (!criteria.getCategory().equals("None") &&
+                                !Objects.equals(criteria.getCategory(), item.getCategory())) {
+                            continue;
+                        }
+//                        System.out.println(criteria.getPeriod() + " " + item.getPeriod());
+                        if (!criteria.getPeriod().equals("None") &&
+                                !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
+                            continue;
+                        }
+                        filteredItem.add(item);
                     }
+                }
 
-                    if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
-                            !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
-                        continue;
-                    }
-                    if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
-                            !Objects.equals(criteria.getName(), item.getName())) {
-                        continue;
-                    }
-                    if (criteria.getCategory().equals("None") &&
-                            !Objects.equals(criteria.getCategory(), item.getCategory())) {
-                        continue;
-                    }
-                    if (criteria.getPeriod().equals("None") &&
-                            !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
-                        continue;
-                    }
-                    filteredItem.add(item);
+                for (Item item : filteredItem) {
+                    System.out.println(item.getLotNumber() + " " + item.getName() + " " + item.getCategory() + " " + item.getPeriod());
                 }
             }
 
@@ -61,6 +70,7 @@ public class DBOperation {
                 System.out.println("WTF");
             }
         });
+
         return filteredItem;
     }
 

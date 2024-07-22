@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = db.getReference("testDemo");
-
-        myRef.child("movies").setValue("B07 Demo!");
+//        DatabaseReference myRef = db.getReference("testDemo");
+//
+//        myRef.child("movies").setValue("B07 Demo!");
 
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
