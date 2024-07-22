@@ -16,6 +16,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class DBOperation {
     private DatabaseReference ref;
@@ -35,10 +37,35 @@ public class DBOperation {
         });
     }
 
+    private String buildRegex(String find) {
+        String [] words = find.split(" ");
+        StringBuilder regex = new StringBuilder("\\b(");
+        for (String word : words) {
+            regex.append("\\w*").append(word).append("\\w*");
+            if (word != words[words.length - 1]) {
+                regex.append("|");
+            }
+        }
+        regex.append(")\\b");
+        return regex.toString();
+    }
+
+    private Boolean matchByRegex(String target, String find) {
+        String regex = buildRegex(find);
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(target);
+        while (matcher.find()) {
+            // if there is at least one instance, return True
+            return true;
+        }
+        return false;
+    }
+
     public Task<List<Item>> searchItem(Item criteria) {
         List<Item> filteredItem = new ArrayList<>();
         TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
 
+//        System.out.println("Result for matchByRegex(): " + matchByRegex("Brass", "Tang Brass"));
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -54,7 +81,7 @@ public class DBOperation {
                         continue;
                     }
                     if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
-                            !Objects.equals(criteria.getName(), item.getName())) {
+                            !matchByRegex(item.getName(), criteria.getName())) {
                         continue;
                     }
                     if (!criteria.getCategory().isEmpty() &&
