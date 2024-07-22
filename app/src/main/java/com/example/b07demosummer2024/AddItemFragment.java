@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,8 @@ public class AddItemFragment extends Fragment {
     // Database connection
     private FirebaseDatabase db;
     private DatabaseReference itemRef;
-    private FirebaseStorage mediaRef;
+    private FirebaseStorage storage;
+    private StorageReference mediaRef;
 
     // Constant used for image picking
     private static final int REQUEST_MEDIA_PICK = 1;
@@ -67,7 +69,8 @@ public class AddItemFragment extends Fragment {
         // Connect to database
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         itemRef = db.getReference("data");
-        mediaRef = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+        storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+        mediaRef = storage.getReference("media");
 
         // Set spinner options
         ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(
@@ -134,7 +137,7 @@ public class AddItemFragment extends Fragment {
         String category = categoryInput.getSelectedItem().toString();
         String period = periodInput.getSelectedItem().toString();
 
-        if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty()) {
+        if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty() || selectedMedia == null) {
             Toast.makeText(this.getActivity(), "Please fill out all fields", Toast.LENGTH_LONG).show();
             return;
         }
