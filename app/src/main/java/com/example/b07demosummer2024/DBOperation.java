@@ -92,11 +92,11 @@ public class DBOperation {
                             !Objects.equals(criteria.getName(), item.getName())) {
                         continue;
                     }
-                    if (!criteria.getCategory().equals("None") &&
+                    if (!criteria.getCategory().isEmpty() &&
                             !Objects.equals(criteria.getCategory(), item.getCategory())) {
                         continue;
                     }
-                    if (!criteria.getPeriod().equals("None") &&
+                    if (!criteria.getPeriod().isEmpty() &&
                             !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
                         continue;
                     }
