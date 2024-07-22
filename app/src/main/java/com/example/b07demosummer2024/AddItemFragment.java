@@ -140,9 +140,11 @@ public class AddItemFragment extends Fragment {
         }
 
         Item toAdd = new Item(Integer.parseInt(lotNumber), name, category, period, description);
+        Item lotNumberCheck = new Item();
+        lotNumberCheck.setLotNumber(toAdd.getLotNumber());
         DBOperation op = new DBOperation(itemRef);
 
-        op.checkLotFree(toAdd, this).addOnCompleteListener(task -> {
+        op.searchItem(lotNumberCheck).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Item> sameLotNumber = task.getResult();
 
@@ -151,7 +153,7 @@ public class AddItemFragment extends Fragment {
                     op.addItem(toAdd, this).addOnCompleteListener(addTask -> {
                         if (addTask.isSuccessful()) {
                             displayToast("Item added successfully");
-                            loadFragment(new HomeFragment());
+                            getParentFragmentManager().popBackStack();
                         } else {
                             displayToast("Failed to add item");
                         }

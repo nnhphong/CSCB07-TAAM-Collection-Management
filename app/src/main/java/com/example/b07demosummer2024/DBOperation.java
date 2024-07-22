@@ -23,41 +23,6 @@ public class DBOperation {
         this.ref = ref;
     }
 
-    public Task<List<Item>> checkLotFree(Item item, AddItemFragment fragment) {
-        TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Item> filteredItems = new ArrayList<>();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Item comp = data.getValue(Item.class);
-
-                    if (comp == null) {
-                        Log.v("MainActivity", "Item is null");
-                        continue;
-                    }
-
-                    Log.v("MainActivty", "" + item.getLotNumber() + " " + comp.getLotNumber() + " " + filteredItems.toString());
-
-                    if (item.getLotNumber() != null && comp.getLotNumber() != null &&
-                            item.getLotNumber().equals(comp.getLotNumber())) {
-                        filteredItems.add(comp);
-                    }
-                }
-
-                tcs.setResult(filteredItems);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.wtf("MainActivity", "WTF WHY IS THIS RUN");
-            }
-        });
-
-        return tcs.getTask();
-    }
-
     public Task<Void> addItem(Item item, AddItemFragment fragment) {
         String id = "id" + item.getLotNumber();
 

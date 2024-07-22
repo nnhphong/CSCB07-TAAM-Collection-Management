@@ -10,7 +10,13 @@ public class Item {
     private String description;
     private Uri media;
 
-    public Item() {}
+    public Item() {
+        lot_number = null;
+        name = "";
+        category = "";
+        period = "";
+        description = "";
+    }
 
     public Item(Integer lot_number, String name, String category, String period, String description) {
         this.lot_number = lot_number;
