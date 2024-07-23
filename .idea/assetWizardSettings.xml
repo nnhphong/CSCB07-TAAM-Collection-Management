@@ -37,7 +37,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/addButton.png" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/file.png" />
                                                 <entry key="opacityPercent" value="80" />
                                               </map>
                                             </option>
@@ -71,10 +71,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/addButton.png" />
-                                      <entry key="outputName" value="add_item_button" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/file.png" />
+                                      <entry key="outputName" value="x_close_button_icon" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffffff" />
+                                      <entry key="themeColor" value="000000" />
                                     </map>
                                   </option>
                                 </PersistentState>

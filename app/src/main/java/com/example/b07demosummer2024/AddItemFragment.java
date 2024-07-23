@@ -9,18 +9,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.OpenableColumns;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,7 +36,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +46,9 @@ public class AddItemFragment extends Fragment {
     // Elements of fragment
     private EditText lotNumberInput, nameInput, descriptionInput;
     private Spinner categoryInput, periodInput;
-    private ImageButton backButton, addImage, submit;
+    private ImageButton backButton, addImage, submit, removeImage;
+    private ConstraintLayout selectedMediaDisplay;
+    private TextView selectedMediaNameDisplay;
 
     private Uri selectedMedia;
 
@@ -65,6 +77,9 @@ public class AddItemFragment extends Fragment {
         backButton = view.findViewById(R.id.backButton);
         addImage = view.findViewById(R.id.addImageButton);
         submit = view.findViewById(R.id.addItemButton);
+        removeImage = view.findViewById(R.id.removeImage);
+        selectedMediaDisplay = view.findViewById(R.id.selectedMediaDisplay);
+        selectedMediaNameDisplay = view.findViewById(R.id.imageSelected);
 
         // Connect to database
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
@@ -108,6 +123,14 @@ public class AddItemFragment extends Fragment {
             }
         });
 
+        removeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedMedia = null;
+                selectedMediaDisplay.setVisibility(View.GONE);
+            }
+        });
+
         return view;
     }
 
@@ -127,10 +150,37 @@ public class AddItemFragment extends Fragment {
         // Check if the selected image/video is valid
         if (requestCode == REQUEST_MEDIA_PICK && resultCode == Activity.RESULT_OK && data != null) {
             selectedMedia = data.getData();
+
+            selectedMediaDisplay.setVisibility(View.VISIBLE);
+            System.out.println(selectedMedia.getPath());
+            selectedMediaNameDisplay.setText(getFileName(selectedMedia));
         }
     }
 
-    public void addItem() {
+    private String getFileName(Uri uri) {
+        String fileName = null;
+        ContentResolver contentResolver = getActivity().getContentResolver();
+
+        if (uri != null) {
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+
+            if (cursor != null) {
+                try {
+                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+
+                    if (cursor.moveToFirst()) {
+                        fileName = cursor.getString(nameIndex);
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        }
+
+        return fileName;
+    }
+
+    private void addItem() {
         String lotNumber = lotNumberInput.getText().toString();
         String name = nameInput.getText().toString();
         String description = descriptionInput.getText().toString();
@@ -138,27 +188,44 @@ public class AddItemFragment extends Fragment {
         String period = periodInput.getSelectedItem().toString();
 
         if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty() || selectedMedia == null) {
-            Toast.makeText(this.getActivity(), "Please fill out all fields", Toast.LENGTH_LONG).show();
+            displayToast("Please fill out all fields");
             return;
         }
 
         Item toAdd = new Item(Integer.parseInt(lotNumber), name, category, period, description);
         Item lotNumberCheck = new Item();
         lotNumberCheck.setLotNumber(toAdd.getLotNumber());
-        DBOperation op = new DBOperation(itemRef);
+        DBOperation op = new DBOperation(itemRef, mediaRef);
 
         op.searchItem(lotNumberCheck).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Item> sameLotNumber = task.getResult();
 
                 if (sameLotNumber.isEmpty()) {
-                    System.out.println(sameLotNumber.toString());
-                    op.addItem(toAdd, this).addOnCompleteListener(addTask -> {
-                        if (addTask.isSuccessful()) {
-                            displayToast("Item added successfully");
-                            getParentFragmentManager().popBackStack();
-                        } else {
-                            displayToast("Failed to add item");
+                    UploadTask uploadTask = op.addImage(selectedMedia, this, toAdd.getLotNumber());
+
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            if (!uploadTask.isSuccessful()) {
+                                displayToast("Image upload failed");
+                            }
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            if (uploadTask.isSuccessful()) {
+                                toAdd.setMediaLink("media/id" + toAdd.getLotNumber());
+
+                                op.addItem(toAdd, AddItemFragment.this).addOnCompleteListener(addTask -> {
+                                    if (addTask.isSuccessful()) {
+                                        displayToast("Item added successfully");
+                                        getParentFragmentManager().popBackStack();
+                                    } else {
+                                        displayToast("Failed to add item");
+                                    }
+                                });
+                            }
                         }
                     });
                 } else {
@@ -168,11 +235,9 @@ public class AddItemFragment extends Fragment {
         });
     }
 
-    public void receiveData(List<Item> data) {
-        this.data = data;
-    }
-
     public void displayToast(String message) {
-        Toast.makeText(this.getActivity(), message, Toast.LENGTH_LONG).show();
+        if (getActivity() != null) {
+            Toast.makeText(this.getActivity(), message, Toast.LENGTH_LONG).show();
+        }
     }
 }
