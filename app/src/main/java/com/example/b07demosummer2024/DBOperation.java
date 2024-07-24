@@ -169,4 +169,25 @@ public class DBOperation {
     public void removeItem(Item item) {
 
     }
+
+    public void loadItems(List<Item> items, ItemAdapter itemAdapter) {
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item != null) {
+                        items.add(item);
+                    }
+                }
+                itemAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("WTF");
+            }
+        });
+    }
 }

@@ -1,7 +1,5 @@
 package com.example.b07demosummer2024;
 
-import android.net.Uri;
-
 public class Item {
     private Integer lot_number;
     private String name;
