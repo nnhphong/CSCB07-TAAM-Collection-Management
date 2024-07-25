@@ -11,11 +11,6 @@
     <string name="manage_items">Manage Items</string>
     <string name="collection_title">TAAM Collections Management</string>
 
-    <string-array name="categories_array">
-        <item>Books</item>
-        <item>Movies</item>
-    </string-array>
-
     <string-array name="arr_category">
         <item></item>
         <item>Jade</item>
@@ -30,6 +25,7 @@
         <item>Enamels</item>
     </string-array>
     <string-array name="arr_period">
+
         <item></item>
         <item>Xia</item>
         <item>Shang</item>

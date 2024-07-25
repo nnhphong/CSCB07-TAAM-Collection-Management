@@ -2,6 +2,7 @@ package com.example.b07demosummer2024;
 
 import android.net.Uri;
 import android.provider.ContactsContract;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,12 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.Collections;
 
 public class DBOperation {
     private DatabaseReference ref;
@@ -110,7 +113,7 @@ public class DBOperation {
 
         return uploadTask;
     }
-
+  
     public Task<Void> addItem(Item item, AddItemFragment fragment) {
         String id = "id" + item.getLotNumber();
 
