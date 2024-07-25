@@ -88,6 +88,7 @@ public class AddItemFragment extends Fragment {
         op.getCategories().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> categories = task.getResult();
+                categories.sort(null);
 
                 ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_spinner_item, categories);
@@ -99,6 +100,7 @@ public class AddItemFragment extends Fragment {
         op.getPeriods().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> periods = task.getResult();
+                periods.sort(null);
 
                 ArrayAdapter<String> period_adapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_spinner_item, periods);
@@ -208,8 +210,11 @@ public class AddItemFragment extends Fragment {
         String category = categoryInput.getText().toString();
         String period = periodInput.getText().toString();
 
-        if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty() || selectedMedia == null) {
+        if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty()) {
             displayToast("Please fill out all fields");
+            return;
+        } else if (selectedMedia == null) {
+            displayToast("Please select an image");
             return;
         }
 
