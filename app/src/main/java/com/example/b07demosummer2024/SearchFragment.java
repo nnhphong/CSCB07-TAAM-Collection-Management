@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,8 +97,8 @@ public class SearchFragment extends Fragment {
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
                         // TODO: displaying search result here
-//                        displayInfo(result);
-                        displaySearchRes(inflater, container, savedInstanceState, result);
+                        displaySearchRes(inflater, container, savedInstanceState,
+                                result);
                     }
                 });
             }
@@ -128,21 +129,22 @@ public class SearchFragment extends Fragment {
         }
     }
 
-//    private void searchItem() {
-//        itemsRef = db.getReference();
-//    }
-    public View displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, List<Item> l) {
-        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        setAdapter(recyclerView, l);
-        return view;
-    }
-
-    public void setAdapter(RecyclerView recyclerView, List<Item> itemList) {
+    public void displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                                 @Nullable Bundle savedInstanceState, List<Item> itemList) {
+        View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.mainRecyclerView);
         ItemAdapter itemAdapter = new ItemAdapter(itemList, getContext());
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(itemAdapter);
+
+        loadFragment(new HomeFragment(itemList));
     }
 
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
