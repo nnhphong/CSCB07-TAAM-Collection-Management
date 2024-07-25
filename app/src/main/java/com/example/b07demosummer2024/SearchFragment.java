@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +52,7 @@ public class SearchFragment extends Fragment {
 
         addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
-     
+
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         DatabaseReference ref = db.getReference("/data");
         op = new DBOperation(ref);
@@ -93,7 +96,8 @@ public class SearchFragment extends Fragment {
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
                         // TODO: displaying search result here
-                        displayInfo(result);
+//                        displayInfo(result);
+                        displaySearchRes(inflater, container, savedInstanceState, result);
                     }
                 });
             }
@@ -119,7 +123,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void displayInfo(List<Item> l) {
-
         for (Item item : l) {
             System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
@@ -128,18 +131,18 @@ public class SearchFragment extends Fragment {
 //    private void searchItem() {
 //        itemsRef = db.getReference();
 //    }
-//    public View displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, List<Item> l) {
-//        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-//        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-//        setAdapter();
-//        return view;
-//    }
-//
-//    public void setAdapter() {
-//        ItemAdapter itemAdapter = new ItemAdapter(itemList);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(itemAdapter);
-//    }
+    public View displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, List<Item> l) {
+        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        setAdapter(recyclerView, l);
+        return view;
+    }
+
+    public void setAdapter(RecyclerView recyclerView, List<Item> itemList) {
+        ItemAdapter itemAdapter = new ItemAdapter(itemList, getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(itemAdapter);
+    }
 
 }

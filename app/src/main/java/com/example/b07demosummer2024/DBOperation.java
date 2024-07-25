@@ -90,6 +90,7 @@ public class DBOperation {
                             !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
                         continue;
                     }
+
                     if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
                             !matchByRegex(item.getName(), criteria.getName())) {
                         continue;
