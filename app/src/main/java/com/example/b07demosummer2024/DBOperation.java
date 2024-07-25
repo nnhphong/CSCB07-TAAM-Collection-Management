@@ -76,8 +76,6 @@ public class DBOperation {
         List<Item> filteredItem = new ArrayList<>();
         TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
 
-//        System.out.println("Result for matchByRegex(): " + matchByRegex("Brass", "Tang Brass"));
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -116,7 +114,7 @@ public class DBOperation {
             }
         });
 
-        return filteredItem;
+        return tcs.getTask();
     }
 
     public void removeItem(Item item) {
