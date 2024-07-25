@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment {
         Button btnReport = view.findViewById(R.id.btnReport);
         Button btnView = view.findViewById(R.id.btnView);
         Button btnLogin = view.findViewById(R.id.btnLogin);
+        Button btnRemove = view.findViewById(R.id.btnRemove);
 
         recyclerView = view.findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -81,6 +82,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadFragment(new AddItemFragment());
+            }
+        });
+
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
