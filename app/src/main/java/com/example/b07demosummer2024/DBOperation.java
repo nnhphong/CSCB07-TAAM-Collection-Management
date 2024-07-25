@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,37 @@ public class DBOperation {
     public DBOperation(DatabaseReference ref, StorageReference mediaRef) {
         this.ref = ref;
         this.mediaRef = mediaRef;
+    }
+
+    public Task<List<String>> getCategories() {
+        List<String> categories = new ArrayList<>();
+        TaskCompletionSource<List<String>> tcs = new TaskCompletionSource<>();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item == null) {
+                        System.out.println("Item is null!");
+                        continue;
+                    }
+
+                    if (!categories.contains(item.getCategory())) {
+                        categories.add(item.getCategory());
+                    }
+                }
+
+                tcs.setResult(categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("WTF");
+            }
+        });
+
+        return tcs.getTask();
     }
 
     public UploadTask addImage(Uri selectedMedia, AddItemFragment fragment, int lotNumber) {
