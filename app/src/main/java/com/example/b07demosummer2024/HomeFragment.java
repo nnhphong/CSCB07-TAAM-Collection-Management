@@ -88,7 +88,6 @@ public class HomeFragment extends Fragment {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
 
