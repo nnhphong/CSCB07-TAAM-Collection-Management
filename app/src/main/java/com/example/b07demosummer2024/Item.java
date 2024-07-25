@@ -1,6 +1,6 @@
 package com.example.b07demosummer2024;
 
-public class Item {
+public class Item implements Comparable<Item> {
     private Integer lot_number;
     private String name;
     private String category;
@@ -38,4 +38,9 @@ public class Item {
     public void setDescription(String description) { this.description = description; }
     public String getMediaLink() { return mediaLink; }
     public void setMediaLink(String mediaLink) { this.mediaLink = mediaLink; }
+
+    @Override
+    public int compareTo(Item item) {
+        return this.lot_number.compareTo(item.lot_number);
+    }
 }

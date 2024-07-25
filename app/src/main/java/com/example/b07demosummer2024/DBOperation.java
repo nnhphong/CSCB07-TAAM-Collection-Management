@@ -20,9 +20,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 
 public class DBOperation {
     private DatabaseReference ref;
@@ -179,8 +179,10 @@ public class DBOperation {
                     Item item = data.getValue(Item.class);
                     if (item != null) {
                         items.add(item);
+                        System.out.println(item.getMediaLink());
                     }
                 }
+                Collections.sort(items);
                 itemAdapter.notifyDataSetChanged();
             }
 

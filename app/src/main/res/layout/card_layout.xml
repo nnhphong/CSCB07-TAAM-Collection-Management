@@ -59,7 +59,8 @@
                 android:contentDescription="A Blue Glazed Ceramic 'Tiger'"
                 android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="60dp"
-                app:srcCompat="@drawable/sample_data" />
+                app:srcCompat="@android:drawable/screen_background_light"
+                tools:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
             <TextView
                 android:id="@+id/itemTextViewPeriod"
