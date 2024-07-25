@@ -49,7 +49,7 @@ public class SearchFragment extends Fragment {
 
         addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
-
+     
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         DatabaseReference ref = db.getReference("/data");
         op = new DBOperation(ref);
@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment {
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 
                 Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
+
                 op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
@@ -113,10 +114,12 @@ public class SearchFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
+
         return view;
     }
 
     private void displayInfo(List<Item> l) {
+
         for (Item item : l) {
             System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
@@ -138,4 +141,5 @@ public class SearchFragment extends Fragment {
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.setAdapter(itemAdapter);
 //    }
+
 }

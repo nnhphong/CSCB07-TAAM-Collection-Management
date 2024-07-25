@@ -1,30 +1,41 @@
 package com.example.b07demosummer2024;
 
 import android.provider.ContactsContract;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class DBOperation {
     private DatabaseReference ref;
+    private StorageReference mediaRef;
+
     public DBOperation(DatabaseReference ref) {
         this.ref = ref;
     }
 
+    public DBOperation(DatabaseReference ref, StorageReference mediaRef) {
+        this.ref = ref;
+        this.mediaRef = mediaRef;
+    }
     public Task<Void> addItem(Item item, AddItemFragment fragment) {
         String id = "id" + item.getLotNumber();
 
@@ -108,5 +119,28 @@ public class DBOperation {
 
     public void removeItem(Item item) {
 
+    }
+
+    public void loadItems(List<Item> items, ItemAdapter itemAdapter) {
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item != null) {
+                        items.add(item);
+                        System.out.println(item.getMediaLink());
+                    }
+                }
+                Collections.sort(items);
+                itemAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("WTF");
+            }
+        });
     }
 }
