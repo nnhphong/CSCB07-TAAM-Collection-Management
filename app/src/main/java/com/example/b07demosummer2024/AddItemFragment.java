@@ -15,9 +15,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +38,8 @@ import java.util.List;
 public class AddItemFragment extends Fragment {
     // Elements of fragment
     private EditText lotNumberInput, nameInput, descriptionInput;
-    private Spinner categoryInput, periodInput;
-    private ImageButton backButton, addImage, submit, removeImage;
+    private AutoCompleteTextView categoryInput, periodInput;
+    private ImageButton backButton, addImage, submit, removeImage, categoryDropdown, periodDropdown;
     private ConstraintLayout selectedMediaDisplay;
     private TextView selectedMediaNameDisplay;
 
@@ -50,6 +50,7 @@ public class AddItemFragment extends Fragment {
     private DatabaseReference itemRef;
     private FirebaseStorage storage;
     private StorageReference mediaRef;
+    private DBOperation op;
 
     // Constant used for image picking
     private static final int REQUEST_MEDIA_PICK = 1;
@@ -65,33 +66,46 @@ public class AddItemFragment extends Fragment {
         lotNumberInput = view.findViewById(R.id.lotNumberInput);
         nameInput = view.findViewById(R.id.nameInput);
         descriptionInput = view.findViewById(R.id.descriptionInput);
-        categoryInput = view.findViewById(R.id.categorySpinner);
-        periodInput = view.findViewById(R.id.periodSpinner);
+        categoryInput = view.findViewById(R.id.categoryInputBox);
+        periodInput = view.findViewById(R.id.periodInputBox);
         backButton = view.findViewById(R.id.backButton);
         addImage = view.findViewById(R.id.addImageButton);
         submit = view.findViewById(R.id.addItemButton);
         removeImage = view.findViewById(R.id.removeImage);
         selectedMediaDisplay = view.findViewById(R.id.selectedMediaDisplay);
         selectedMediaNameDisplay = view.findViewById(R.id.imageSelected);
+        categoryDropdown = view.findViewById(R.id.categoryDropdownButton);
+        periodDropdown = view.findViewById(R.id.periodDropdownButton);
 
         // Connect to database
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         itemRef = db.getReference("data");
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
         mediaRef = storage.getReference("media");
+        op = new DBOperation(itemRef, mediaRef);
 
         // Set spinner options
-        ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(
-                getContext(), R.array.arr_category, android.R.layout.simple_spinner_item
-        );
-        category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        categoryInput.setAdapter(category_adapter);
+        op.getCategories().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> categories = task.getResult();
 
-        ArrayAdapter<CharSequence> period_adapter = ArrayAdapter.createFromResource(
-                getContext(), R.array.arr_period, android.R.layout.simple_spinner_item
-        );
-        period_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        periodInput.setAdapter(period_adapter);
+                ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, categories);
+                category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                categoryInput.setAdapter(category_adapter);
+            }
+        });
+
+        op.getPeriods().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> periods = task.getResult();
+
+                ArrayAdapter<String> period_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, periods);
+                period_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                periodInput.setAdapter(period_adapter);
+            }
+        });
 
         // Selecting image
         addImage.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +135,20 @@ public class AddItemFragment extends Fragment {
             public void onClick(View view) {
                 selectedMedia = null;
                 selectedMediaDisplay.setVisibility(View.GONE);
+            }
+        });
+
+        categoryDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                categoryInput.showDropDown();
+            }
+        });
+
+        periodDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                periodInput.showDropDown();
             }
         });
 
@@ -177,8 +205,8 @@ public class AddItemFragment extends Fragment {
         String lotNumber = lotNumberInput.getText().toString();
         String name = nameInput.getText().toString();
         String description = descriptionInput.getText().toString();
-        String category = categoryInput.getSelectedItem().toString();
-        String period = periodInput.getSelectedItem().toString();
+        String category = categoryInput.getText().toString();
+        String period = periodInput.getText().toString();
 
         if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty() || selectedMedia == null) {
             displayToast("Please fill out all fields");
@@ -188,7 +216,6 @@ public class AddItemFragment extends Fragment {
         Item toAdd = new Item(Integer.parseInt(lotNumber), name, category, period, description);
         Item lotNumberCheck = new Item();
         lotNumberCheck.setLotNumber(toAdd.getLotNumber());
-        DBOperation op = new DBOperation(itemRef, mediaRef);
 
         op.searchItem(lotNumberCheck).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

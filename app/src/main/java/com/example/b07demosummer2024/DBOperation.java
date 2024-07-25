@@ -39,6 +39,7 @@ public class DBOperation {
 
     public Task<List<String>> getCategories() {
         List<String> categories = new ArrayList<>();
+        categories.add("");
         TaskCompletionSource<List<String>> tcs = new TaskCompletionSource<>();
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -57,6 +58,38 @@ public class DBOperation {
                 }
 
                 tcs.setResult(categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("WTF");
+            }
+        });
+
+        return tcs.getTask();
+    }
+
+    public Task<List<String>> getPeriods() {
+        List<String> periods = new ArrayList<>();
+        periods.add("");
+        TaskCompletionSource<List<String>> tcs = new TaskCompletionSource<>();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item == null) {
+                        System.out.println("Item is null!");
+                        continue;
+                    }
+
+                    if (!periods.contains(item.getPeriod())) {
+                        periods.add(item.getPeriod());
+                    }
+                }
+
+                tcs.setResult(periods);
             }
 
             @Override
