@@ -40,6 +40,8 @@ public class SearchFragment extends Fragment {
         spinner.setAdapter(adapter);
     }
 
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         Button btnTop = view.findViewById(R.id.btnTop);
