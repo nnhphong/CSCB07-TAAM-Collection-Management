@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
@@ -32,9 +33,12 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
+        ImageButton btnSearchFilter = view.findViewById(R.id.btnSearchFilter);
+        Button btnAdd = view.findViewById(R.id.btnAdd);
         Button btnReport = view.findViewById(R.id.btnReport);
-        Button viewButton = view.findViewById(R.id.viewButton);
-        Button loginButton = view.findViewById(R.id.loginButton);
+        Button btnView = view.findViewById(R.id.btnView);
+        Button btnLogin = view.findViewById(R.id.btnLogin);
+        Button btnRemove = view.findViewById(R.id.btnRemove);
 
         recyclerView = view.findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -49,12 +53,12 @@ public class HomeFragment extends Fragment {
 
         op.loadItems(itemList, itemAdapter);
 
-        viewButton.setOnClickListener(new View.OnClickListener() {
+        btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
         });
@@ -64,6 +68,27 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadFragment(new ReportFragment());
+            }
+        });
+
+        btnSearchFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new SearchFragment());
+            }
+        });
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new AddItemFragment());
+            }
+        });
+
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
