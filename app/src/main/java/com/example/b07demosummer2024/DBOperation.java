@@ -1,11 +1,14 @@
 package com.example.b07demosummer2024;
 
+import android.net.Uri;
 import android.provider.ContactsContract;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
@@ -16,6 +19,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +41,79 @@ public class DBOperation {
         this.ref = ref;
         this.mediaRef = mediaRef;
     }
+
+    public Task<List<String>> getCategories() {
+        List<String> categories = new ArrayList<>();
+        categories.add("");
+        TaskCompletionSource<List<String>> tcs = new TaskCompletionSource<>();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item == null) {
+                        System.out.println("Item is null!");
+                        continue;
+                    }
+
+                    if (!categories.contains(item.getCategory())) {
+                        categories.add(item.getCategory());
+                    }
+                }
+
+                tcs.setResult(categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("WTF");
+            }
+        });
+
+        return tcs.getTask();
+    }
+
+    public Task<List<String>> getPeriods() {
+        List<String> periods = new ArrayList<>();
+        periods.add("");
+        TaskCompletionSource<List<String>> tcs = new TaskCompletionSource<>();
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Item item = data.getValue(Item.class);
+                    if (item == null) {
+                        System.out.println("Item is null!");
+                        continue;
+                    }
+
+                    if (!periods.contains(item.getPeriod())) {
+                        periods.add(item.getPeriod());
+                    }
+                }
+
+                tcs.setResult(periods);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("WTF");
+            }
+        });
+
+        return tcs.getTask();
+    }
+
+    public UploadTask addImage(Uri selectedMedia, AddItemFragment fragment, int lotNumber) {
+        String id = "id" + lotNumber;
+        StorageReference media = mediaRef.child(id);
+        UploadTask uploadTask = media.putFile(selectedMedia);
+
+        return uploadTask;
+    }
+  
     public Task<Void> addItem(Item item, AddItemFragment fragment) {
         String id = "id" + item.getLotNumber();
 
