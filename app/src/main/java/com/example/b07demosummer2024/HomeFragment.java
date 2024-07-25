@@ -28,11 +28,23 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase db;
     private FirebaseStorage storage;
     private DBOperation op;
+    private boolean passedBySearch = false;
+
+    public HomeFragment() {
+
+    }
+
+    public HomeFragment(List<Item> itemList) {
+        this.itemList = itemList;
+        this.passedBySearch = true;
+        System.out.println(itemList.isEmpty());
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
+        recyclerView = view.findViewById(R.id.mainRecyclerView);
         ImageButton btnSearchFilter = view.findViewById(R.id.btnSearchFilter);
         Button btnAdd = view.findViewById(R.id.btnAdd);
         Button btnReport = view.findViewById(R.id.btnReport);
@@ -40,18 +52,21 @@ public class HomeFragment extends Fragment {
         Button btnLogin = view.findViewById(R.id.btnLogin);
         Button btnRemove = view.findViewById(R.id.btnRemove);
 
-        recyclerView = view.findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
         op = new DBOperation(db.getReference("data"), storage.getReference("/"));
 
-        itemList = new ArrayList<>();
+        if (!this.passedBySearch) {
+            itemList = new ArrayList<>();
+        }
         itemAdapter = new ItemAdapter(itemList, getContext());
         recyclerView.setAdapter(itemAdapter);
-
-        op.loadItems(itemList, itemAdapter);
+        if (!this.passedBySearch) {
+            op.loadItems(itemList, itemAdapter);
+        }
+        itemAdapter.notifyDataSetChanged();
 
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override

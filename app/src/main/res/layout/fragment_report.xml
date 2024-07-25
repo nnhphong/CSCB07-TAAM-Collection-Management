@@ -18,85 +18,81 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnTop"
-        android:layout_width="80dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:background="#00FFFFFF"
-        android:onClick="test"
-        app:icon="@drawable/top"
-        app:iconPadding="0dp"
-        app:iconSize="50dp"
-        app:iconTint="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/btnTop"-->
+<!--        android:layout_width="64dp"-->
+<!--        android:layout_height="33dp"-->
+<!--        android:layout_marginStart="4dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:background="#00FFFFFF"-->
+<!--        android:onClick="test"-->
+<!--        android:scaleType="centerInside"-->
+<!--        app:icon="@drawable/arrow_back"-->
+<!--        app:iconPadding="0dp"-->
+<!--        app:iconSize="50dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        />-->
 
     <EditText
         android:id="@+id/txtLotNumber"
-        android:layout_width="361dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="56dp"
         android:ems="10"
         android:hint="Lot number"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
         android:id="@+id/txtName"
-        android:layout_width="361dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/txtLotNumber" />
 
     <Spinner
         android:id="@+id/dropDownCategory"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.792"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <Spinner
         android:id="@+id/dropDownPeriod"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.792"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/dropDownCategory" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="45dp"
         android:text="Category"
-        app:layout_constraintEnd_toStartOf="@+id/dropDownCategory"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="64dp"
         android:text="Period"
-        app:layout_constraintEnd_toStartOf="@+id/dropDownPeriod"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
@@ -110,13 +106,11 @@
 
     <CheckBox
         android:id="@+id/ckbDescPicOnly"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="Description and Pictures only"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/dropDownPeriod"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -124,6 +118,7 @@
         android:id="@+id/btnGenReport"
         android:layout_width="133dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Create report"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,10 +126,35 @@
         app:layout_constraintTop_toTopOf="@+id/txtStatus"
         app:layout_constraintVertical_bias="0.060000002" />
 
-    <!--        android:text="Lot number"-->
-    <!--        android:background="#80000000"-->
-    <!--        android:textColor="#FFFFFF"-->
-    android:textSize="14sp"
-    tools:layout_editor_absoluteX="23dp"
-    tools:layout_editor_absoluteY="112dp" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <ImageButton
+        android:id="@+id/btnTop"
+        android:layout_width="54dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="20dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arrow_back" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="394dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="76dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

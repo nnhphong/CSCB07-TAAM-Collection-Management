@@ -127,7 +127,7 @@ public class DBOperation {
     }
 
     private String buildRegex(String find) {
-        String [] words = find.split(" ");
+        String [] words = find.toLowerCase().split(" ");
         StringBuilder regex = new StringBuilder("\\b(");
         for (String word : words) {
             regex.append("\\w*").append(word).append("\\w*");
@@ -142,7 +142,7 @@ public class DBOperation {
     private Boolean matchByRegex(String target, String find) {
         String regex = buildRegex(find);
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(target);
+        Matcher matcher = pattern.matcher(target.toLowerCase());
         while (matcher.find()) {
             // if there is at least one instance, return True
             return true;
@@ -168,6 +168,7 @@ public class DBOperation {
                             !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
                         continue;
                     }
+
                     if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
                             !matchByRegex(item.getName(), criteria.getName())) {
                         continue;
