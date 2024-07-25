@@ -5,20 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <EditText
+        android:id="@+id/txtKeywordSearch"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="Search"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Search" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/taamHeading"
@@ -37,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="203dp" />
+        app:layout_constraintGuide_percent="0.5"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainRecyclerView"
@@ -50,18 +49,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <Button-->
-    <!--        android:id="@+id/btnSearch"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginTop="60dp"-->
-    <!--        android:onClick="onClick_btnSearch"-->
-    <!--        android:text="Button"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <Button
-        android:id="@+id/viewButton"
+        android:id="@+id/btnView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -70,10 +59,11 @@
         android:text="View"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -82,31 +72,40 @@
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <Button
         android:id="@+id/btnReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="16dp"
         android:text="Report"
-        app:layout_constraintBottom_toBottomOf="@+id/mainRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <Button
         android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="16dp"
         android:text="Add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline" />
+
+    <ImageButton
+        android:id="@+id/btnSearchFilter"
+        android:layout_width="53dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="centerInside"
+        android:contentDescription="Button for Search Filter"
+        app:layout_constraintBottom_toBottomOf="@+id/txtKeywordSearch"
+        app:layout_constraintEnd_toEndOf="@+id/txtKeywordSearch"
+        app:layout_constraintTop_toTopOf="@+id/txtKeywordSearch"
+        app:srcCompat="@drawable/filter_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
