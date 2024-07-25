@@ -2,7 +2,12 @@ package com.example.b07demosummer2024;
 
 import android.provider.ContactsContract;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Collections;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class DBOperation {
     private DatabaseReference ref;
@@ -29,13 +36,48 @@ public class DBOperation {
         this.ref = ref;
         this.mediaRef = mediaRef;
     }
+    public Task<Void> addItem(Item item, AddItemFragment fragment) {
+        String id = "id" + item.getLotNumber();
 
-    public void addItem(Item item) {
-
+        return ref.child(id).setValue(item).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                fragment.displayToast("Item added successfully");
+            } else {
+                fragment.displayToast("Failed to add item");
+            }
+        });
     }
 
-    public List<Item> searchItem(Item criteria) {
+    private String buildRegex(String find) {
+        String [] words = find.split(" ");
+        StringBuilder regex = new StringBuilder("\\b(");
+        for (String word : words) {
+            regex.append("\\w*").append(word).append("\\w*");
+            if (word != words[words.length - 1]) {
+                regex.append("|");
+            }
+        }
+        regex.append(")\\b");
+        return regex.toString();
+    }
+
+    private Boolean matchByRegex(String target, String find) {
+        String regex = buildRegex(find);
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(target);
+        while (matcher.find()) {
+            // if there is at least one instance, return True
+            return true;
+        }
+        return false;
+    }
+
+    public Task<List<Item>> searchItem(Item criteria) {
         List<Item> filteredItem = new ArrayList<>();
+        TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
+
+//        System.out.println("Result for matchByRegex(): " + matchByRegex("Brass", "Tang Brass"));
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -51,19 +93,21 @@ public class DBOperation {
                         continue;
                     }
                     if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
-                            !Objects.equals(criteria.getName(), item.getName())) {
+                            !matchByRegex(item.getName(), criteria.getName())) {
                         continue;
                     }
-                    if (criteria.getCategory().equals("None") &&
+                    if (!criteria.getCategory().isEmpty() &&
                             !Objects.equals(criteria.getCategory(), item.getCategory())) {
                         continue;
                     }
-                    if (criteria.getPeriod().equals("None") &&
+                    if (!criteria.getPeriod().isEmpty() &&
                             !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
                         continue;
                     }
                     filteredItem.add(item);
                 }
+
+                tcs.setResult(filteredItem);
             }
 
             @Override
@@ -71,6 +115,7 @@ public class DBOperation {
                 System.out.println("WTF");
             }
         });
+
         return filteredItem;
     }
 

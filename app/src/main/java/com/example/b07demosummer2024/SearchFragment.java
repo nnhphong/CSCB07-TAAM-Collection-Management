@@ -18,8 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -41,9 +47,10 @@ public class SearchFragment extends Fragment {
 
         addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
         addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
-
-        db = FirebaseDatabase.getInstance();
-        op = new DBOperation(db.getReference());
+     
+        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+        DatabaseReference ref = db.getReference("/data");
+        op = new DBOperation(ref);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,14 +85,59 @@ public class SearchFragment extends Fragment {
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 
                 Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
-                List<Item> result = op.searchItem(item);
-                displayInfo(result);
+
+                op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Item>> task) {
+                        List<Item> result = task.getResult();
+                        // TODO: displaying search result here
+                        displayInfo(result);
+                    }
+                });
             }
         });
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Item it = snapshot.getValue(Item.class);
+                if (it != null) {
+                    System.out.println(it.toString());
+                } else {
+                    System.out.println("load post:onCancelled");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+
         return view;
     }
 
     private void displayInfo(List<Item> l) {
 
+        for (Item item : l) {
+            System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
+        }
     }
+
+//    private void searchItem() {
+//        itemsRef = db.getReference();
+//    }
+//    public View displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, List<Item> l) {
+//        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+//        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+//        setAdapter();
+//        return view;
+//    }
+//
+//    public void setAdapter() {
+//        ItemAdapter itemAdapter = new ItemAdapter(itemList);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(itemAdapter);
+//    }
+
 }
