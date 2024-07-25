@@ -9,18 +9,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private List<Item> itemList;
+    private ItemAdapter itemAdapter;
+
+    private FirebaseDatabase db;
+    private FirebaseStorage storage;
+    private DBOperation op;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-        Button buttonRecyclerView = view.findViewById(R.id.buttonRecyclerView);
-        Button buttonScroller = view.findViewById(R.id.buttonScroller);
-        Button buttonSpinner = view.findViewById(R.id.buttonSpinner);
-        Button buttonManageItems = view.findViewById(R.id.buttonManageItems);
         Button btnSearch = view.findViewById(R.id.btnSearch);
-        Button btnAdd = view.findViewById(R.id.btnAdd);
+        Button viewButton = view.findViewById(R.id.viewButton);
+        Button loginButton = view.findViewById(R.id.loginButton);
+
+        recyclerView = view.findViewById(R.id.mainRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+        storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+        op = new DBOperation(db.getReference("data"), storage.getReference("/"));
+
+        itemList = new ArrayList<>();
+        itemAdapter = new ItemAdapter(itemList, getContext());
+        recyclerView.setAdapter(itemAdapter);
+
+        op.loadItems(itemList, itemAdapter);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,11 +56,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                loadFragment(new AddItemFragment());
-            }
+            public void onClick(View view) {}
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {}
         });
 
         return view;

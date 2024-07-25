@@ -1,14 +1,12 @@
 package com.example.b07demosummer2024;
 
-import android.net.Uri;
-
-public class Item {
+public class Item implements Comparable<Item> {
     private Integer lot_number;
     private String name;
     private String category;
     private String period;
     private String description;
-    private Uri media;
+    private String mediaLink;
 
     public Item() {
         lot_number = null;
@@ -16,6 +14,7 @@ public class Item {
         category = "";
         period = "";
         description = "";
+        mediaLink = "";
     }
 
     public Item(Integer lot_number, String name, String category, String period, String description) {
@@ -37,4 +36,11 @@ public class Item {
     public void setPeriod(String period) { this.period = period; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getMediaLink() { return mediaLink; }
+    public void setMediaLink(String mediaLink) { this.mediaLink = mediaLink; }
+
+    @Override
+    public int compareTo(Item item) {
+        return this.lot_number.compareTo(item.lot_number);
+    }
 }
