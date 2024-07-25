@@ -50,15 +50,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:onClick="onClick_btnSearch"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <Button-->
+<!--        android:id="@+id/btnSearch"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:onClick="onClick_btnSearch"-->
+<!--        android:text="Button"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <Button
         android:id="@+id/viewButton"
@@ -84,7 +84,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
     <Button
         android:id="@+id/buttonRecyclerView"
         android:layout_width="0dp"
@@ -126,23 +125,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClick_btnSearch"
-        android:text="Button"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="47dp" />
-
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        tools:layout_editor_absoluteX="240dp"
-        tools:layout_editor_absoluteY="44dp" />
 
     <Button
         android:id="@+id/btnReport"
