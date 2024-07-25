@@ -12,11 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ public class HomeFragment extends Fragment {
     private ItemAdapter itemAdapter;
 
     private FirebaseDatabase db;
+    private FirebaseStorage storage;
     private DBOperation op;
 
     @Nullable
@@ -34,15 +33,18 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
         Button btnSearch = view.findViewById(R.id.btnSearch);
+        Button viewButton = view.findViewById(R.id.viewButton);
+        Button loginButton = view.findViewById(R.id.loginButton);
 
         recyclerView = view.findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        op = new DBOperation(db.getReference("data"));
+        storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+        op = new DBOperation(db.getReference("data"), storage.getReference("/"));
 
         itemList = new ArrayList<>();
-        itemAdapter = new ItemAdapter(itemList);
+        itemAdapter = new ItemAdapter(itemList, getContext());
         recyclerView.setAdapter(itemAdapter);
 
         op.loadItems(itemList, itemAdapter);
@@ -52,6 +54,16 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 loadFragment(new SearchFragment());
             }
+        });
+
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {}
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {}
         });
 
         return view;

@@ -10,14 +10,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 
 public class DBOperation {
     private DatabaseReference ref;
+    private StorageReference mediaRef;
+
     public DBOperation(DatabaseReference ref) {
         this.ref = ref;
+    }
+
+    public DBOperation(DatabaseReference ref, StorageReference mediaRef) {
+        this.ref = ref;
+        this.mediaRef = mediaRef;
     }
 
     public void addItem(Item item) {
@@ -77,8 +87,10 @@ public class DBOperation {
                     Item item = data.getValue(Item.class);
                     if (item != null) {
                         items.add(item);
+                        System.out.println(item.getMediaLink());
                     }
                 }
+                Collections.sort(items);
                 itemAdapter.notifyDataSetChanged();
             }
 
