@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-        Button btnSearch = view.findViewById(R.id.btnSearch);
+        Button btnReport = view.findViewById(R.id.btnReport);
         Button viewButton = view.findViewById(R.id.viewButton);
         Button loginButton = view.findViewById(R.id.loginButton);
 
@@ -49,13 +49,6 @@ public class HomeFragment extends Fragment {
 
         op.loadItems(itemList, itemAdapter);
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new SearchFragment());
-            }
-        });
-
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
@@ -64,6 +57,14 @@ public class HomeFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
+        });
+
+
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new ReportFragment());
+            }
         });
 
         return view;
