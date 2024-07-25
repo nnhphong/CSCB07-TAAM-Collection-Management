@@ -28,6 +28,7 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase db;
     private FirebaseStorage storage;
     private DBOperation op;
+    private boolean passedBySearch = false;
 
     public HomeFragment() {
 
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment(List<Item> itemList) {
         this.itemList = itemList;
+        this.passedBySearch = true;
         System.out.println(itemList.isEmpty());
     }
 
@@ -56,12 +58,12 @@ public class HomeFragment extends Fragment {
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
         op = new DBOperation(db.getReference("data"), storage.getReference("/"));
 
-        if (itemList == null) {
+        if (!this.passedBySearch) {
             itemList = new ArrayList<>();
         }
         itemAdapter = new ItemAdapter(itemList, getContext());
         recyclerView.setAdapter(itemAdapter);
-        if (itemList.isEmpty()) {
+        if (!this.passedBySearch) {
             op.loadItems(itemList, itemAdapter);
         }
         itemAdapter.notifyDataSetChanged();

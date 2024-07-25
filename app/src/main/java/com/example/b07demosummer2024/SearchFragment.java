@@ -97,6 +97,7 @@ public class SearchFragment extends Fragment {
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
                         // TODO: displaying search result here
+                        displayInfo(result);
                         displaySearchRes(inflater, container, savedInstanceState,
                                 result);
                     }
