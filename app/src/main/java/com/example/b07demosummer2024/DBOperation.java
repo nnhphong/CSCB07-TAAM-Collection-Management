@@ -6,9 +6,12 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
@@ -129,11 +132,6 @@ public class DBOperation {
         itemMap.put("mediaLink", item.getMediaLink());
 
         return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                fragment.displayToast("Item added successfully");
-            } else {
-                fragment.displayToast("Failed to add item");
-            }
         });
     }
 
@@ -207,8 +205,18 @@ public class DBOperation {
         return tcs.getTask();
     }
 
-    public void removeItem(Item item) {
+    public Task<Void> removeImage(Item item) {
+        String mediaLink = item.getMediaLink();
 
+        return mediaRef.child(mediaLink).delete().addOnCompleteListener(task -> {
+        });
+    }
+
+    public Task<Void> removeItem(Item item) {
+        String id = "id" + item.getLotNumber();
+
+        return ref.child(id).removeValue().addOnCompleteListener(task -> {
+        });
     }
 
     public void loadItems(List<Item> items, ItemAdapter itemAdapter) {
