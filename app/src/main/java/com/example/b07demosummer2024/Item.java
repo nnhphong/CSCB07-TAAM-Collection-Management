@@ -7,6 +7,7 @@ public class Item implements Comparable<Item> {
     private String period;
     private String description;
     private String mediaLink;
+    private boolean selected;
 
     public Item() {
         lot_number = null;
@@ -15,6 +16,7 @@ public class Item implements Comparable<Item> {
         period = "";
         description = "";
         mediaLink = "";
+        selected = false;
     }
 
     public Item(Integer lot_number, String name, String category, String period, String description) {
@@ -38,6 +40,8 @@ public class Item implements Comparable<Item> {
     public void setDescription(String description) { this.description = description; }
     public String getMediaLink() { return mediaLink; }
     public void setMediaLink(String mediaLink) { this.mediaLink = mediaLink; }
+    public boolean getSelected() { return selected; }
+    public void setSelected(boolean selected) { this.selected = selected; }
 
     @Override
     public int compareTo(Item item) {

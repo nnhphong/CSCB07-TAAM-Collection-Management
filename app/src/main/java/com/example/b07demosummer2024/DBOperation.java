@@ -23,7 +23,9 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Collections;
 import java.util.regex.Pattern;
@@ -117,7 +119,16 @@ public class DBOperation {
     public Task<Void> addItem(Item item, AddItemFragment fragment) {
         String id = "id" + item.getLotNumber();
 
-        return ref.child(id).setValue(item).addOnCompleteListener(task -> {
+        // Only store these fields in the database
+        Map<String, Object> itemMap = new HashMap<>();
+        itemMap.put("lotNumber", item.getLotNumber());
+        itemMap.put("name", item.getName());
+        itemMap.put("category", item.getCategory());
+        itemMap.put("period", item.getPeriod());
+        itemMap.put("description", item.getDescription());
+        itemMap.put("mediaLink", item.getMediaLink());
+
+        return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 fragment.displayToast("Item added successfully");
             } else {
