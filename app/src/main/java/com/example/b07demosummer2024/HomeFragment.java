@@ -1,11 +1,13 @@
 package com.example.b07demosummer2024;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,6 +105,47 @@ public class HomeFragment extends Fragment {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<Item> selected = itemAdapter.getSelected();
+
+                if (selected.isEmpty()) {
+                    displayToast("Please select an item to remove");
+                    return;
+                }
+
+                String ids = "";
+
+                for (int i = 0; i < selected.size(); i++) {
+                    ids += selected.get(i).getLotNumber();
+
+                    if (i < selected.size() - 1) {
+                        ids += ", ";
+                    }
+                }
+
+                AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
+                removePopup.setTitle("Remove Items");
+                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
+                removePopup.setPositiveButton("Yes", (dialog, which) -> {
+                    for (Item item : selected) {
+                        op.removeItem(item).addOnCompleteListener(task -> {
+                           if (task.isSuccessful()) {
+                                op.removeImage(item).addOnCompleteListener(addTask -> {
+                                   if (!addTask.isSuccessful()) {
+                                       displayToast("Removing image failed: Lot Number " + item.getLotNumber());
+                                       return;
+                                   }
+                                });
+                           } else {
+                               displayToast("Removing item failed: Lot Number " + item.getLotNumber());
+                               return;
+                           }
+                        });
+                    }
+
+                    displayToast("Successfully removed " + selected.size() + " items");
+                });
+                removePopup.setNegativeButton("No", null);
+                removePopup.show();
             }
         });
 
@@ -114,5 +157,11 @@ public class HomeFragment extends Fragment {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void displayToast(String message) {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+        }
     }
 }
