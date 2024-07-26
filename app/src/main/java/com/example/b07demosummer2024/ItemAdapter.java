@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
@@ -61,6 +63,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 System.out.println("Loading failure");
             }
         });
+
+        holder.itemCheckBox.setChecked(item.getSelected());
+
+        holder.itemCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.setSelected(!item.getSelected());
+            }
+        });
     }
 
     @Override
@@ -68,9 +79,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return itemList.size();
     }
 
+    public List<Item> getSelected() {
+        List<Item> selected = new ArrayList<>();
+
+        for (Item item : itemList) {
+            if (item.getSelected()) {
+                selected.add(item);
+            }
+        }
+
+        return selected;
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView itemTextViewLotNumber, itemTextViewName, itemTextViewPeriod, itemTextViewDescription;
         ImageView itemImageView;
+        CheckBox itemCheckBox;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             itemTextViewLotNumber = itemView.findViewById(R.id.itemTextViewLotNumber);
@@ -78,6 +102,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             itemTextViewPeriod = itemView.findViewById(R.id.itemTextViewPeriod);
             itemTextViewDescription = itemView.findViewById(R.id.itemTextViewDescription);
             itemImageView = itemView.findViewById(R.id.itemImageView);
+            itemCheckBox = itemView.findViewById(R.id.itemCheckBox);
         }
     }
 }
