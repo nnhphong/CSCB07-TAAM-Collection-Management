@@ -27,10 +27,6 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -50,7 +47,7 @@ import java.util.function.BiConsumer;
 
 public class PDFGenerator {
     Fragment curFrag;
-    private int pageHeight = 400;
+    private int pageHeight = 500;
     private int pageWidth = 700;
     private int imgHeight = 200;
     private int imgWidth = 180;
@@ -65,9 +62,8 @@ public class PDFGenerator {
     public void createReportPDF(List<Item> list, boolean descImgOnly) {
         ref = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com").getReference();
         PdfDocument pdfDocument = new PdfDocument();
-        Paint paint = new Paint();
 
-        drawAllItems(pdfDocument, paint, list).whenComplete(new BiConsumer<Void, Throwable>() {
+        drawAllItems(pdfDocument, list, descImgOnly).whenComplete(new BiConsumer<Void, Throwable>() {
             @Override
             public void accept(Void unused, Throwable throwable) {
                 File file = new File(Environment.getExternalStoragePublicDirectory(
@@ -81,21 +77,22 @@ public class PDFGenerator {
                     Toast.makeText(curFrag.getContext(), "Failed to generate PDF file.",
                             Toast.LENGTH_SHORT).show();
                 }
-                System.out.println("Im here");
                 pdfDocument.close();
             }
         });
     }
 
-    private CompletableFuture<Void> drawAllItems(PdfDocument pdfDocument, Paint paint, List<Item> list) {
+    private CompletableFuture<Void> drawAllItems(PdfDocument pdfDocument,
+                                                 List<Item> list, boolean descImgOnly) {
         CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
         for (Item item : list) {
-            future = future.thenCompose(avoid -> drawItem(pdfDocument, paint, item));
+            future = future.thenCompose(avoid -> drawItem(pdfDocument, item, descImgOnly));
         }
         return future;
     }
 
-    private CompletableFuture<Void> drawItem(PdfDocument pdfDocument, Paint paint, Item item) {
+    private CompletableFuture<Void> drawItem(PdfDocument pdfDocument, Item item,
+                                             boolean descImgOnly) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         ref.child(item.getMediaLink()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -108,16 +105,19 @@ public class PDFGenerator {
                 bmp = BitmapFactory.decodeStream(inputStream);
                 scaledbmp = Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false);
 
-                if (scaledbmp != null) {
-                    canvas.drawBitmap(scaledbmp, 30, 80, paint);
-                } else {
-                    Log.e("generatePDF", "Bitmap is null. Skipping bitmap drawing.");
-                }
+                canvas.drawBitmap(scaledbmp, 30, 80, new Paint());
+                System.out.println(descImgOnly);
 
-                drawText(canvas, item.getName(), pageWidth / 2, 30, 25, true);
-                drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 45, 13, true);
-                drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 60, 13, true);
-                drawText(canvas, item.getDescription(), pageWidth / 2 + 2, 90, 15, false);
+                drawText(canvas, item.getName(), pageWidth / 2, 30, 25, true,
+                        true);
+                if (!descImgOnly) {
+                    drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 45,
+                            13, true, true);
+                    drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 60,
+                            13, true, true);
+                }
+                drawText(canvas, item.getDescription(), 250, 90, 15,
+                        false, false);
 
                 pdfDocument.finishPage(myPage);
                 future.complete(null);
@@ -126,14 +126,39 @@ public class PDFGenerator {
         return future;
     }
 
-    private void drawText(Canvas canvas, String text, int x, int y, int fontSize, boolean isBold) {
+    private void drawText(Canvas canvas, String text, int x, int y, int fontSize, boolean isBold,
+                          boolean isCentered) {
         Paint paint = new Paint();
         paint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         paint.setColor(ContextCompat.getColor(curFrag.getContext(), R.color.black));
         paint.setTextSize(fontSize);
-        paint.setTextAlign(Paint.Align.CENTER);
+        if (isCentered) {
+            paint.setTextAlign(Paint.Align.CENTER);
+        }
         paint.setFakeBoldText(isBold);
-        canvas.drawText(text, x, y, paint);
+
+        List<String> textList = splitTextIntoLines(text,  60);
+        for (String txt: textList) {
+            canvas.drawText(txt, x, y, paint);
+            y += 15;
+        }
+    }
+
+    private List<String> splitTextIntoLines(String text, int max_width) {
+        List<String> strlist = new ArrayList<>();
+        String[] words = text.split(" ");
+        String curLine = "";
+        for (String word : words) {
+            if (curLine.length() + word.length() > max_width) {
+                strlist.add(curLine);
+                curLine = "";
+            }
+            curLine += word + " ";
+        }
+        if (!curLine.isEmpty()) {
+            strlist.add(curLine);
+        }
+        return strlist;
     }
 
     private String getPDFFileName() {

@@ -119,7 +119,7 @@ public class SearchFragment extends Fragment {
                         // TODO: displaying search result here
                         result.sort(null);
 
-                        displayInfo(result);
+//                        displayInfo(result);
                         displaySearchRes(inflater, container, savedInstanceState,
                                 result);
                     }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -33,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,22 +55,64 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ReportFragment extends Fragment {
+    View view;
+    ImageButton btnTop;
+    Button btnGenReport;
+    EditText txtLotNumber;
+    EditText txtName;
+    TextView txtStatus;
+    Spinner dropDownCategory;
+    Spinner dropDownPeriod;
+    CheckBox ckbDescImgOnly;
+
     FirebaseDatabase db;
     DBOperation op;
+
     Bitmap bmp, scaledbmp;
     PDFGenerator pdfWriter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_report, container, false);
-        ImageButton btnTop = view.findViewById(R.id.btnTop);
-        Button btnGenReport = view.findViewById(R.id.btnGenReport);
+        view = inflater.inflate(R.layout.fragment_report, container, false);
+        btnTop = view.findViewById(R.id.btnTop);
+        btnGenReport = view.findViewById(R.id.btnGenReport);
+        txtLotNumber = view.findViewById(R.id.txtLotNumber);
+        txtName = view.findViewById(R.id.txtName);
+        txtStatus = view.findViewById(R.id.txtStatus);
+        dropDownCategory = view.findViewById(R.id.dropDownCategory);
+        dropDownPeriod = view.findViewById(R.id.dropDownPeriod);
+        ckbDescImgOnly = view.findViewById(R.id.ckbDescPicOnly);
 
-        db = FirebaseDatabase.getInstance();
+        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+        DatabaseReference FBref = db.getReference("/data");
         StorageReference ref = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com").getReference();
-        op = new DBOperation(db.getReference("/data"));
+        op = new DBOperation(FBref);
         pdfWriter = new PDFGenerator(this);
+
+        op.getCategories().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> categories = task.getResult();
+                categories.sort(null);
+
+                ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, categories);
+                category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                dropDownCategory.setAdapter(category_adapter);
+            }
+        });
+
+        op.getPeriods().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> periods = task.getResult();
+                periods.sort(null);
+
+                ArrayAdapter<String> period_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, periods);
+                period_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                dropDownPeriod.setAdapter(period_adapter);
+            }
+        });
 
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,13 +130,7 @@ public class ReportFragment extends Fragment {
         btnGenReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText txtLotNumber = view.findViewById(R.id.txtLotNumber);
-                EditText txtName = view.findViewById(R.id.txtName);
-                TextView txtStatus = view.findViewById(R.id.txtStatus);
-                Spinner dropDownCategory = view.findViewById(R.id.dropDownCategory);
-                Spinner dropDownPeriod = view.findViewById(R.id.dropDownPeriod);
-                CheckBox ckbDescImgOnly = view.findViewById(R.id.ckbDescPicOnly);
-                final boolean[] descImgOnly = {true};
+                final boolean[] descImgOnly = {false};
 
                 String strLotNumber = txtLotNumber.getText().toString();
                 String name = txtName.getText().toString();
@@ -121,6 +159,7 @@ public class ReportFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
+                        System.out.println(result.size());
                         pdfWriter.createReportPDF(result, descImgOnly[0]);
                     }
                 });
