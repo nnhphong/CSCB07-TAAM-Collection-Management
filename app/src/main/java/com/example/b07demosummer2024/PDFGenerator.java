@@ -50,14 +50,13 @@ import java.util.function.BiConsumer;
 
 public class PDFGenerator {
     Fragment curFrag;
-    private int pageHeight = 1120;
-    private int pageWidth = 792;
+    private int pageHeight = 400;
+    private int pageWidth = 700;
     private int imgHeight = 200;
-    private int imgWidth = 140;
+    private int imgWidth = 180;
     private static final int PERMISSION_REQUEST_CODE = 200;
     Bitmap bmp, scaledbmp;
     StorageReference ref;
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     public PDFGenerator(Fragment curFrag) {
         this.curFrag = curFrag;
@@ -84,7 +83,6 @@ public class PDFGenerator {
                 }
                 System.out.println("Im here");
                 pdfDocument.close();
-                executor.shutdown();
             }
         });
     }
@@ -98,41 +96,43 @@ public class PDFGenerator {
     }
 
     private CompletableFuture<Void> drawItem(PdfDocument pdfDocument, Paint paint, Item item) {
-        return CompletableFuture.runAsync(() -> {
-            ref.child(item.getMediaLink()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pageWidth,
-                            pageHeight, 1).create();
-                    PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
-                    Canvas canvas = myPage.getCanvas();
-                    InputStream inputStream = new ByteArrayInputStream(bytes);
-                    bmp = BitmapFactory.decodeStream(inputStream);
-                    scaledbmp = Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false);
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        ref.child(item.getMediaLink()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pageWidth,
+                        pageHeight, 1).create();
+                PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
+                Canvas canvas = myPage.getCanvas();
+                InputStream inputStream = new ByteArrayInputStream(bytes);
+                bmp = BitmapFactory.decodeStream(inputStream);
+                scaledbmp = Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false);
 
-                    if (scaledbmp != null) {
-                        canvas.drawBitmap(scaledbmp, 20, pageHeight / 3, paint);
-                    } else {
-                        Log.e("generatePDF", "Bitmap is null. Skipping bitmap drawing.");
-                    }
-
-                    drawText(canvas, item.getName(), pageWidth / 2, 25*2, 25);
-                    drawText(canvas, item.getPeriod(), 50, 20, 15);
-                    drawText(canvas, item.getCategory(), 30, 20, 15);
-                    drawText(canvas, item.getDescription(), pageWidth / 2 + 2, 80, 15);
-
-                    pdfDocument.finishPage(myPage);
+                if (scaledbmp != null) {
+                    canvas.drawBitmap(scaledbmp, 30, 80, paint);
+                } else {
+                    Log.e("generatePDF", "Bitmap is null. Skipping bitmap drawing.");
                 }
-            });
-        }, executor);
+
+                drawText(canvas, item.getName(), pageWidth / 2, 30, 25, true);
+                drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 45, 13, true);
+                drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 60, 13, true);
+                drawText(canvas, item.getDescription(), pageWidth / 2 + 2, 90, 15, false);
+
+                pdfDocument.finishPage(myPage);
+                future.complete(null);
+            }
+        });
+        return future;
     }
 
-    private void drawText(Canvas canvas, String text, int x, int y, int fontSize) {
+    private void drawText(Canvas canvas, String text, int x, int y, int fontSize, boolean isBold) {
         Paint paint = new Paint();
         paint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         paint.setColor(ContextCompat.getColor(curFrag.getContext(), R.color.black));
         paint.setTextSize(fontSize);
-//        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setFakeBoldText(isBold);
         canvas.drawText(text, x, y, paint);
     }
 

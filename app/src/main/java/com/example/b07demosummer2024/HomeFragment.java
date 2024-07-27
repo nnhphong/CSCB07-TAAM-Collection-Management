@@ -39,7 +39,6 @@ public class HomeFragment extends Fragment {
     public HomeFragment(List<Item> itemList) {
         this.itemList = itemList;
         this.passedBySearch = true;
-        System.out.println(itemList.isEmpty());
     }
 
     @Nullable

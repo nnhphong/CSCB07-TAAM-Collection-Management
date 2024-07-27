@@ -83,55 +83,55 @@ public class ReportFragment extends Fragment {
             pdfWriter.requestPermission();
         }
 
-//        btnGenReport.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                EditText txtLotNumber = view.findViewById(R.id.txtLotNumber);
-//                EditText txtName = view.findViewById(R.id.txtName);
-//                TextView txtStatus = view.findViewById(R.id.txtStatus);
-//                Spinner dropDownCategory = view.findViewById(R.id.dropDownCategory);
-//                Spinner dropDownPeriod = view.findViewById(R.id.dropDownPeriod);
-//                CheckBox ckbDescImgOnly = view.findViewById(R.id.ckbDescPicOnly);
-//                final boolean[] descImgOnly = {true};
-//
-//                String strLotNumber = txtLotNumber.getText().toString();
-//                String name = txtName.getText().toString();
-//                Integer lotNum = null;
-//                if (!strLotNumber.isEmpty()) {
-//                    try {
-//                        lotNum = Integer.parseInt(strLotNumber);
-//                    } catch (NumberFormatException e) {
-//                        txtStatus.setText("Error: Lot number is not a number");
-//                        txtStatus.setTextColor(Color.parseColor("#f54242"));
-//                        return;
-//                    }
-//                }
-//
-//                String selectedCategory = dropDownCategory.getSelectedItem().toString();
-//                String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
-//
-//                Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
-//                ckbDescImgOnly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    @Override
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        descImgOnly[0] = isChecked;
-//                    }
-//                });
-//                op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<List<Item>> task) {
-//                        List<Item> result = task.getResult();
-//                        pdfWriter.createReportPDF(result, descImgOnly[0]);
-//                    }
-//                });
-//            }
-//        });
+        btnGenReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText txtLotNumber = view.findViewById(R.id.txtLotNumber);
+                EditText txtName = view.findViewById(R.id.txtName);
+                TextView txtStatus = view.findViewById(R.id.txtStatus);
+                Spinner dropDownCategory = view.findViewById(R.id.dropDownCategory);
+                Spinner dropDownPeriod = view.findViewById(R.id.dropDownPeriod);
+                CheckBox ckbDescImgOnly = view.findViewById(R.id.ckbDescPicOnly);
+                final boolean[] descImgOnly = {true};
 
-        List<Item> result = new ArrayList<>();
-        Item item = new Item(69, "Tea Man art", "Paintings", "Ming", "This is Tea Man art masterpiece");
-        item.setMediaLink("media/id5");
-        result.add(item);
-        pdfWriter.createReportPDF(result, false);
+                String strLotNumber = txtLotNumber.getText().toString();
+                String name = txtName.getText().toString();
+                Integer lotNum = null;
+                if (!strLotNumber.isEmpty()) {
+                    try {
+                        lotNum = Integer.parseInt(strLotNumber);
+                    } catch (NumberFormatException e) {
+                        txtStatus.setText("Error: Lot number is not a number");
+                        txtStatus.setTextColor(Color.parseColor("#f54242"));
+                        return;
+                    }
+                }
+
+                String selectedCategory = dropDownCategory.getSelectedItem().toString();
+                String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
+
+                Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
+                ckbDescImgOnly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        descImgOnly[0] = isChecked;
+                    }
+                });
+                op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Item>> task) {
+                        List<Item> result = task.getResult();
+                        pdfWriter.createReportPDF(result, descImgOnly[0]);
+                    }
+                });
+            }
+        });
+
+//        List<Item> result = new ArrayList<>();
+//        Item item = new Item(69, "Tea Man art", "Paintings", "Ming", "This is Tea Man art masterpiece");
+//        item.setMediaLink("media/id5");
+//        result.add(item);
+//        pdfWriter.createReportPDF(result, false);
 
         return view;
     }
