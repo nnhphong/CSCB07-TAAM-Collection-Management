@@ -209,7 +209,6 @@ public class DBOperation {
                     Item item = data.getValue(Item.class);
                     if (item != null) {
                         items.add(item);
-                        System.out.println(item.getMediaLink());
                     }
                 }
                 Collections.sort(items);
