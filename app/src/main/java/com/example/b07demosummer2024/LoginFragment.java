@@ -44,42 +44,37 @@ public class LoginFragment extends Fragment {
         usernameTxt = view.findViewById(R.id.username_input);
         passwordTxt = view.findViewById(R.id.password_input);
         login_button = view.findViewById(R.id.button);
-        String username = usernameTxt.getText().toString();
-        String password = passwordTxt.getText().toString();
-        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        ref = db.getReference("/user_info");
-        DBOperation op = new DBOperation(ref);
 
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getActivity(),
-                            "Incorrect credentials", Toast.LENGTH_LONG).show();
-                    return;
+                /*
+                if (usernameTxt.getText().toString().equals("name1") &&
+                        passwordTxt.getText().toString().equals("123")) {
+                    loadFragment(new HomeFragment());
                 }
-                op.login(username, password).addOnCompleteListener(new OnCompleteListener<List<User>>() {
+                else {
+                    Toast.makeText(getActivity(), "Incorrect credentials", Toast.LENGTH_LONG).show();
+                }
+                */
+                db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+                ref = db.getReference("/user_info");
+                DBOperation op = new DBOperation(ref);
+                op.login(usernameTxt, passwordTxt).addOnCompleteListener(new OnCompleteListener<List<User>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<User>> task) {
-                        /*
                         List<User> res = task.getResult();
-                        if (res.isEmpty() || res.size() == 0) {
+                        if (res.size() == 0) {
                             Toast.makeText(getActivity(),
                                     "Incorrect credentials", Toast.LENGTH_LONG).show();
                         }
                         else {
                             loadFragment(new HomeFragment());
-                        }
-                         */
-                        if (username.equals("name1") && password.equals("123")) {
-                            loadFragment(new HomeFragment());
-                        }
-                        else {
-                            Toast.makeText(getActivity(),
-                                    "Incorrect credentials", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+
+
             }
         });
         return view;
