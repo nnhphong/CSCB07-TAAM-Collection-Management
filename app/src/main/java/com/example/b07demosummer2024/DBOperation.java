@@ -132,6 +132,7 @@ public class DBOperation {
         itemMap.put("period", item.getPeriod());
         itemMap.put("description", item.getDescription());
         itemMap.put("mediaLink", item.getMediaLink());
+        itemMap.put("mediaType", item.getMediaType());
 
         return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
         });
