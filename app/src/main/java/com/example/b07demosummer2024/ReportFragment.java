@@ -1,15 +1,7 @@
 package com.example.b07demosummer2024;
 
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.pdf.PdfDocument;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,35 +16,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.graphics.Canvas;
+
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import data.PDFGenerator;
 
 public class ReportFragment extends Fragment {
     View view;
@@ -68,7 +46,6 @@ public class ReportFragment extends Fragment {
     FirebaseDatabase db;
     DBOperation op;
 
-    Bitmap bmp, scaledbmp;
     PDFGenerator pdfWriter;
 
     @Nullable
@@ -155,22 +132,16 @@ public class ReportFragment extends Fragment {
                         descImgOnly[0] = isChecked;
                     }
                 });
+
                 op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
-                        System.out.println(result.size());
                         pdfWriter.createReportPDF(result, descImgOnly[0]);
                     }
                 });
             }
         });
-
-//        List<Item> result = new ArrayList<>();
-//        Item item = new Item(69, "Tea Man art", "Paintings", "Ming", "This is Tea Man art masterpiece");
-//        item.setMediaLink("media/id5");
-//        result.add(item);
-//        pdfWriter.createReportPDF(result, false);
 
         return view;
     }
