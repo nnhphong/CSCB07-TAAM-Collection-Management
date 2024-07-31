@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
+import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -16,10 +17,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.b07demosummer2024.DBOperation;
 import com.example.b07demosummer2024.Item;
 import com.example.b07demosummer2024.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayInputStream;
@@ -68,6 +72,7 @@ public class PDFGenerator {
                             Toast.LENGTH_SHORT).show();
                 }
                 pdfDocument.close();
+                curFrag.getParentFragmentManager().popBackStack();
             }
         });
     }
@@ -85,24 +90,47 @@ public class PDFGenerator {
     private CompletableFuture<Void> setUpPage(PdfDocument pdfDocument, Item item,
                                              boolean descImgOnly) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        ref.child(item.getMediaLink()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+        ref.child(item.getMediaLink()).getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
             @Override
-            public void onSuccess(byte[] bytes) {
-                PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pageWidth,
-                        pageHeight, 1).create();
-                PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
-                Canvas canvas = myPage.getCanvas();
-                InputStream inputStream = new ByteArrayInputStream(bytes);
+            public void onSuccess(StorageMetadata storageMetadata) {
+                String contentType = storageMetadata.getContentType();
+                String fileType = getFileType(contentType);
+                try {
+                    File tempFile = File.createTempFile("media", fileType);
 
-                bmp = BitmapFactory.decodeStream(inputStream);
-                scaledbmp = Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false);
+                    ref.child(item.getMediaLink()).getFile(tempFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            System.out.println(tempFile.getPath());
+                            PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pageWidth,
+                                    pageHeight, 1).create();
+                            PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
+                            Canvas canvas = myPage.getCanvas();
 
-                drawPage(canvas, item, descImgOnly);
+                            if (contentType.startsWith("image/")) {
+                                bmp = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
+                            } else {
+                                bmp = getVideoThumbnail(tempFile);
+                            }
 
-                pdfDocument.finishPage(myPage);
-                future.complete(null);
+                            scaledbmp = Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false);
+                            drawPage(canvas, item, descImgOnly);
+
+                            pdfDocument.finishPage(myPage);
+                            future.complete(null);
+
+                            tempFile.delete();
+
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println(fileType);
+                    System.out.println("File not created");
+                }
             }
         });
+
         return future;
     }
 
@@ -173,5 +201,16 @@ public class PDFGenerator {
     public void requestPermission() {
         ActivityCompat.requestPermissions(curFrag.getActivity(), new String[]{WRITE_EXTERNAL_STORAGE,
                 READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    }
+
+    private String getFileType(String contentType) {
+        return contentType.substring(contentType.indexOf("/") + 1);
+    }
+
+    private Bitmap getVideoThumbnail(File file) {
+        MediaMetadataRetriever retriver = new MediaMetadataRetriever();
+        retriver.setDataSource(file.getAbsolutePath());
+
+        return retriver.getFrameAtTime(0);
     }
 }
