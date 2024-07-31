@@ -74,6 +74,7 @@ public class SearchFragment extends Fragment {
         op = new DBOperation(ref);
 
         Display display = new Display(this);
+
         addDropDownValue(view);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
