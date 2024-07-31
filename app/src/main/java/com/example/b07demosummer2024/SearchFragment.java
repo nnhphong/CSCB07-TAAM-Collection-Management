@@ -33,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import ui.view.Display;
+
 public class SearchFragment extends Fragment {
     private FirebaseDatabase db;
     private DBOperation op;
@@ -76,6 +78,8 @@ public class SearchFragment extends Fragment {
         DatabaseReference ref = db.getReference("/data");
         op = new DBOperation(ref);
 
+        Display display = new Display(this);
+
         addDropDownValue(view);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
@@ -116,11 +120,9 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
-                        // TODO: displaying search result here
                         result.sort(null);
 
-//                        displayInfo(result);
-                        displaySearchRes(inflater, container, savedInstanceState,
+                        display.displaySearchRes(inflater, container, savedInstanceState,
                                 result);
                     }
                 });
@@ -150,24 +152,5 @@ public class SearchFragment extends Fragment {
         for (Item item : l) {
             System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
-    }
-
-    public void displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState, List<Item> itemList) {
-        View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.mainRecyclerView);
-        ItemAdapter itemAdapter = new ItemAdapter(itemList, getContext());
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(itemAdapter);
-
-        loadFragment(new HomeFragment(itemList));
-    }
-
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }

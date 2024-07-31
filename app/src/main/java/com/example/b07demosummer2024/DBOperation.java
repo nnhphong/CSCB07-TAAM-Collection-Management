@@ -37,7 +37,7 @@ import java.util.regex.Matcher;
 import data.StringFilter;
 
 public class DBOperation {
-    private DatabaseReference ref;
+    private final DatabaseReference ref;
     private StorageReference mediaRef;
 
     public DBOperation(DatabaseReference ref) {
@@ -156,7 +156,14 @@ public class DBOperation {
                 !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
             return false;
         }
-        return true;
+        if (!criteria.getDescription().isEmpty()) {
+            System.out.println(criteria.getDescription());
+            System.out.println(item.getDescription());
+            System.out.println(StringFilter.matchByRegex(criteria.getDescription(),
+                    item.getDescription()));
+        }
+        return criteria.getDescription().isEmpty() || StringFilter.matchByRegex(criteria.getDescription(),
+                item.getDescription());
     }
 
     public Task<List<Item>> searchItem(Item criteria) {
