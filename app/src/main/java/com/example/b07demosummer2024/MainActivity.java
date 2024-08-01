@@ -2,6 +2,7 @@ package com.example.b07demosummer2024;
 
 import android.os.Bundle;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -12,9 +13,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.widget.Button;
 import android.view.View;
 import android.content.Intent;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,18 +20,17 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase db;
-    DatabaseReference ref;
-    private Button btnLogin;
-    EditText username, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            loadFragment(new LoginFragment());
-        }
 
+        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
+
+        if (savedInstanceState == null) {
+            loadFragment(new PreLoginFragment());
+        }
     }
 
     private void loadFragment(Fragment fragment) {
@@ -43,16 +40,14 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    /*
-@Override
-public void onBackPressed() {
-if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-     */
+//    @Override
+//    public void onBackPressed() {
+//        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+//            getSupportFragmentManager().popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     public void test(View v) {
 

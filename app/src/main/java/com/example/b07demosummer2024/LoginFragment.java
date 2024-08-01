@@ -44,7 +44,7 @@ public class LoginFragment extends Fragment {
         usernameTxt = view.findViewById(R.id.username_input);
         passwordTxt = view.findViewById(R.id.password_input);
         login_button = view.findViewById(R.id.login_button);
-        togglePasswordVisibility = view.findViewById(R.id.isVisible);
+        togglePasswordVisibility = view.findViewById(R.id.is_visible);
         // Hide the password initially
         passwordTxt.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
