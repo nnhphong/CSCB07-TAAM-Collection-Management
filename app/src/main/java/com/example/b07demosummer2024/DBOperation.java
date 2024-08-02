@@ -3,8 +3,6 @@ package com.example.b07demosummer2024;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -34,8 +32,10 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import data.StringFilter;
+
 public class DBOperation {
-    private DatabaseReference ref;
+    private final DatabaseReference ref;
     private StorageReference mediaRef;
 
     public DBOperation(DatabaseReference ref) {
@@ -104,7 +104,6 @@ public class DBOperation {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("WTF");
             }
         });
 
@@ -112,6 +111,7 @@ public class DBOperation {
     }
 
     public UploadTask addImage(Uri selectedMedia, AddItemFragment fragment, int lotNumber) {
+        // Todo: check if mediaRef null
         String id = "id" + lotNumber;
         StorageReference media = mediaRef.child(id);
         UploadTask uploadTask = media.putFile(selectedMedia);
@@ -130,33 +130,38 @@ public class DBOperation {
         itemMap.put("period", item.getPeriod());
         itemMap.put("description", item.getDescription());
         itemMap.put("mediaLink", item.getMediaLink());
+        itemMap.put("mediaType", item.getMediaType());
 
         return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
         });
     }
 
-    private String buildRegex(String find) {
-        String [] words = find.toLowerCase().split(" ");
-        StringBuilder regex = new StringBuilder("\\b(");
-        for (String word : words) {
-            regex.append("\\w*").append(word).append("\\w*");
-            if (word != words[words.length - 1]) {
-                regex.append("|");
-            }
+    private boolean isMatchedItem(Item item, Item criteria) {
+        if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
+                !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
+            return false;
         }
-        regex.append(")\\b");
-        return regex.toString();
-    }
 
-    private Boolean matchByRegex(String target, String find) {
-        String regex = buildRegex(find);
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(target.toLowerCase());
-        while (matcher.find()) {
-            // if there is at least one instance, return True
-            return true;
+        if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
+                !StringFilter.matchByRegex(item.getName(), criteria.getName())) {
+            return false;
         }
-        return false;
+        if (!criteria.getCategory().isEmpty() &&
+                !Objects.equals(criteria.getCategory(), item.getCategory())) {
+            return false;
+        }
+        if (!criteria.getPeriod().isEmpty() &&
+                !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
+            return false;
+        }
+        if (!criteria.getDescription().isEmpty()) {
+            System.out.println(criteria.getDescription());
+            System.out.println(item.getDescription());
+            System.out.println(StringFilter.matchByRegex(criteria.getDescription(),
+                    item.getDescription()));
+        }
+        return criteria.getDescription().isEmpty() || StringFilter.matchByRegex(criteria.getDescription(),
+                item.getDescription());
     }
 
     public Task<List<Item>> searchItem(Item criteria) {
@@ -173,24 +178,9 @@ public class DBOperation {
                         continue;
                     }
 
-                    if (criteria.getLotNumber() != null && item.getLotNumber() != null &&
-                            !Objects.equals(item.getLotNumber(), criteria.getLotNumber())) {
-                        continue;
+                    if (isMatchedItem(item, criteria)) {
+                        filteredItem.add(item);
                     }
-
-                    if (!criteria.getName().isEmpty() && !item.getName().isEmpty() &&
-                            !matchByRegex(item.getName(), criteria.getName())) {
-                        continue;
-                    }
-                    if (!criteria.getCategory().isEmpty() &&
-                            !Objects.equals(criteria.getCategory(), item.getCategory())) {
-                        continue;
-                    }
-                    if (!criteria.getPeriod().isEmpty() &&
-                            !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
-                        continue;
-                    }
-                    filteredItem.add(item);
                 }
 
                 tcs.setResult(filteredItem);
@@ -198,7 +188,6 @@ public class DBOperation {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("WTF");
             }
         });
 
@@ -239,5 +228,34 @@ public class DBOperation {
                 System.out.println("WTF");
             }
         });
+    }
+
+    public Task<List<User>> login(String username, String password) {
+        TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
+        List<User> user_list = new ArrayList<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot users : snapshot.getChildren()) {
+                    User user = users.getValue(User.class);
+                    if (user == null) {
+                        continue;
+                    }
+                    if (!user.getUsername().isEmpty() && !username.isEmpty() &&
+                            !Objects.equals(user.getUsername(), username)) {
+                        continue;
+                    }
+                    if (!user.getPassword().isEmpty() && !password.isEmpty() &&
+                            !Objects.equals(user.getPassword(), password)) {
+                        continue;
+                    }
+                    user_list.add(user);
+                }
+                tcs.setResult(user_list);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+        return tcs.getTask();
     }
 }
