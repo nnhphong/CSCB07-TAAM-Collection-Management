@@ -215,6 +215,24 @@ public class DBOperation {
         return tcs.getTask();
     }
 
+    public Task<Item> getItemData(String itemId) {
+        TaskCompletionSource<Item> tcs = new TaskCompletionSource<>();
+
+        ref.child(itemId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Item item = snapshot.getValue(Item.class);
+                tcs.setResult(item);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                tcs.setException(error.toException());
+            }
+        });
+        return tcs.getTask();
+    }
+
     public void loadItems(List<Item> items, ItemAdapter itemAdapter) {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
