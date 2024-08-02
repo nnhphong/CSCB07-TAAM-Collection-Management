@@ -1,0 +1,62 @@
+{
+	"user" : {
+	},
+	
+	"data": {
+		"id1" : {
+			"lot_number": 1,
+			"category": "Painting",
+			"description": "This is a Vase",
+			"name": "Tang Vase",
+			"period": "Tang"
+		},
+		
+		"id2" : {
+			"lot_number": 2,
+			"category": "Calligraphy",
+			"description": "This is a text",
+			"name": "Zhou Text",
+			"period": "Zhou"
+		}, 
+		
+		"id3" : {
+			"lot_number": 3,
+			"category": "Jade",
+			"description": "This is a jade",
+			"name": "South and North Jade",
+			"period": "South and North"
+		},
+		
+		"id4" : {
+			"lot_number": 4,
+			"category": "Enamels",
+			"description": "This is an enamel",
+			"name": "Yuan Vase",
+			"period": "Yuan"
+		},
+		
+		"id5" : {
+			"lot_number": 5,
+			"category": "Painting",
+			"description": "This is a painting",
+			"name": "Shang Painting",
+			"period": "Shang"
+		},
+		
+		"id6" : {
+			"lot_number": 6,
+			"category": "Brass",
+			"description": "This is a metal",
+			"name": "Tang Brass",
+			"period": "Tang"
+		},
+		
+		"id7" : {
+			"lot_number": 7,
+			"category": "Jade",
+			"description": "This is a jade",
+			"name": "Yuan Vase",
+			"period": "Yuan"
+		}
+	}
+}
