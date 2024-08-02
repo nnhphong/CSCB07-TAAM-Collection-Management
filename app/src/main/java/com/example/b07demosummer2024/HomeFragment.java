@@ -2,11 +2,14 @@ package com.example.b07demosummer2024;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,11 +19,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import ui.view.Display;
 
 public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -31,6 +39,8 @@ public class HomeFragment extends Fragment {
     private FirebaseStorage storage;
     private DBOperation op;
     private boolean passedBySearch = false;
+    private EditText txtKeywordSearch;
+    private Display display;
 
     public HomeFragment() {
 
@@ -39,7 +49,6 @@ public class HomeFragment extends Fragment {
     public HomeFragment(List<Item> itemList) {
         this.itemList = itemList;
         this.passedBySearch = true;
-        System.out.println(itemList.isEmpty());
     }
 
     @Nullable
@@ -53,12 +62,15 @@ public class HomeFragment extends Fragment {
         Button btnView = view.findViewById(R.id.btnView);
         Button btnLogin = view.findViewById(R.id.btnLogin);
         Button btnRemove = view.findViewById(R.id.btnRemove);
+        txtKeywordSearch = view.findViewById(R.id.txtKeywordSearch);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
         op = new DBOperation(db.getReference("data"), storage.getReference("/"));
+
+        display = new Display(this);
 
         if (!this.passedBySearch) {
             itemList = new ArrayList<>();
@@ -149,7 +161,80 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
+                    display.displaySearchRes(inflater, container, savedInstanceState, result);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return view;
+    }
+
+    private List<Item> handleKeywordSearch(String keyword) {
+        List<Item> searchResult = new ArrayList<>();
+        keywordSearchByLotNum(keyword).continueWithTask(task -> {
+            if (task.isSuccessful()) {
+                List<Item> res = task.getResult();
+                if (res != null) {
+                    searchResult.addAll(res);
+                }
+            }
+            return keywordSearchByName(keyword);
+        }).continueWithTask(task -> {
+            if (task.isSuccessful()) {
+                List<Item> res = task.getResult();
+                if (res != null) {
+                    searchResult.addAll(res);
+                }
+            }
+            return keywordSearchByDescription(keyword);
+        }).continueWithTask(task -> {
+            if (task.isSuccessful()) {
+                List<Item> res = task.getResult();
+                display.displayItemOnConsole(res);
+                if (res != null) {
+                    searchResult.addAll(res);
+                }
+            }
+            return Tasks.forException(new NullPointerException("The End!!"));
+        });
+        return searchResult;
+    }
+
+    private Task<List<Item>> keywordSearchByLotNum(String keyword) {
+        if (!canParseInt(keyword)) {
+            return Tasks.forException(new NullPointerException(""));
+        }
+        int lotNum = Integer.parseInt(keyword);
+        Item item = new Item(lotNum, "", "", "", "");
+        return op.searchItem(item);
+    }
+
+    private Task<List<Item>> keywordSearchByName(String keyword) {
+        Item item = new Item(null, keyword, "", "", "");
+        return op.searchItem(item);
+    }
+
+    private Task<List<Item>> keywordSearchByDescription(String keyword) {
+        Item item = new Item(null, "", "", "", keyword);
+        return op.searchItem(item);
+    }
+
+    private boolean canParseInt(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException ignored) {}
+        return false;
     }
 
     private void loadFragment(Fragment fragment) {

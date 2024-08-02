@@ -240,6 +240,14 @@ public class AddItemFragment extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             if (uploadTask.isSuccessful()) {
+                                ContentResolver content = getActivity().getContentResolver();
+
+                                if (content.getType(selectedMedia).startsWith("image/")) {
+                                    toAdd.setMediaType("image");
+                                } else {
+                                    toAdd.setMediaType("video");
+                                }
+
                                 toAdd.setMediaLink("media/id" + toAdd.getLotNumber());
 
                                 op.addItem(toAdd, AddItemFragment.this).addOnCompleteListener(addTask -> {
