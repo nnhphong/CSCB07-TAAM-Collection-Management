@@ -1,11 +1,13 @@
 package com.example.b07demosummer2024;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,14 +72,28 @@ public class HomeFragment extends Fragment {
 
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {}
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    // Show a message to the user to select an item first
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0); // Assuming you only want to view one item at a time
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber; // Generate the ID as "id" + lot number
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+
+                }
+
+                }
         });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
         });
-
 
         btnReport.setOnClickListener(new View.OnClickListener() {
             @Override
