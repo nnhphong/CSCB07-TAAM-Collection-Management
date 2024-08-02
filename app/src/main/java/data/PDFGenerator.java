@@ -2,6 +2,7 @@ package data;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,8 @@ import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -41,8 +44,8 @@ import java.util.function.BiConsumer;
 // Todo: implement interface for this class to conform OCP
 public class PDFGenerator {
     Fragment curFrag;
-    private int pageHeight = 500;
-    private int pageWidth = 700;
+    private int pageHeight = 792;
+    private int pageWidth = 612;
     private int imgHeight = 200;
     private int imgWidth = 180;
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -61,10 +64,14 @@ public class PDFGenerator {
             @Override
             public void accept(Void unused, Throwable throwable) {
                 File file = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS), getPDFFileName());
-
+                        Environment.DIRECTORY_DOWNLOADS), ".temp.pdf");
                 try {
                     pdfDocument.writeTo(new FileOutputStream(file));
+                    PrintManager printManager = (PrintManager) curFrag.getContext().getSystemService(Context.PRINT_SERVICE);
+                    PrintDocumentAdapter printAdapter = new PdfPrint(curFrag.getContext(),
+                            file.getAbsolutePath(), getPDFFileName());
+                    printManager.print("Document", printAdapter, null);
+
                     Toast.makeText(curFrag.getContext(), "PDF file generated successfully.",
                             Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
@@ -102,7 +109,6 @@ public class PDFGenerator {
                     ref.child(item.getMediaLink()).getFile(tempFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            System.out.println(tempFile.getPath());
                             PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pageWidth,
                                     pageHeight, 1).create();
                             PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
@@ -135,16 +141,16 @@ public class PDFGenerator {
     }
 
     private void drawPage(Canvas canvas, Item item, boolean descImgOnly) {
-        canvas.drawBitmap(scaledbmp, 30, 80, new Paint());
-        drawText(canvas, item.getName(), pageWidth / 2, 30, 25, true,
+        canvas.drawBitmap(scaledbmp, 30, 200, new Paint());
+        drawText(canvas, item.getName(), pageWidth / 2, 60, 25, true,
                 true);
         if (!descImgOnly) {
-            drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 45,
+            drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 85,
                     13, true, true);
-            drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 60,
+            drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 105,
                     13, true, true);
         }
-        drawText(canvas, item.getDescription(), 250, 90, 15,
+        drawText(canvas, item.getDescription(), 250, 200, 15,
                 false, false);
     }
 
@@ -159,10 +165,10 @@ public class PDFGenerator {
         }
         paint.setFakeBoldText(isBold);
 
-        List<String> textList = splitTextIntoLines(text,  60);
+        List<String> textList = splitTextIntoLines(text,  45);
         for (String txt: textList) {
             canvas.drawText(txt, x, y, paint);
-            y += 15;
+            y += 20;
         }
     }
 
