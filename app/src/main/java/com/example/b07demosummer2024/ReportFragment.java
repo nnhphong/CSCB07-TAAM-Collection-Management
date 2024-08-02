@@ -47,6 +47,7 @@ public class ReportFragment extends Fragment {
     DBOperation op;
 
     PDFGenerator pdfWriter;
+    boolean isChecked;
 
     private Toast currentToast;
 
@@ -106,10 +107,16 @@ public class ReportFragment extends Fragment {
             pdfWriter.requestPermission();
         }
 
+        ckbDescImgOnly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isChecked = !isChecked;
+            }
+        });
+
         btnGenReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean[] descImgOnly = {false};
 
                 String strLotNumber = txtLotNumber.getText().toString();
                 String name = txtName.getText().toString();
@@ -128,18 +135,12 @@ public class ReportFragment extends Fragment {
                 String selectedPeriod = dropDownPeriod.getSelectedItem().toString();
 
                 Item item = new Item(lotNum, name, selectedCategory, selectedPeriod, "");
-                ckbDescImgOnly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        descImgOnly[0] = isChecked;
-                    }
-                });
 
                 op.searchItem(item).addOnCompleteListener(new OnCompleteListener<List<Item>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
-                        pdfWriter.createReportPDF(result, descImgOnly[0]);
+                        pdfWriter.createReportPDF(result, isChecked);
                     }
                 });
             }

@@ -141,16 +141,21 @@ public class PDFGenerator {
     }
 
     private void drawPage(Canvas canvas, Item item, boolean descImgOnly) {
-        canvas.drawBitmap(scaledbmp, 30, 200, new Paint());
-        drawText(canvas, item.getName(), pageWidth / 2, 60, 25, true,
-                true);
+        int descImgHeight = 60;
+
         if (!descImgOnly) {
+            descImgHeight = 200;
+
+            drawText(canvas, item.getName(), pageWidth / 2, 60, 25, true,
+                    true);
             drawText(canvas, "Period: " + item.getPeriod(), pageWidth / 2, 85,
                     13, true, true);
             drawText(canvas, "Category: " + item.getCategory(), pageWidth / 2, 105,
                     13, true, true);
         }
-        drawText(canvas, item.getDescription(), 250, 200, 15,
+
+        canvas.drawBitmap(scaledbmp, 30, descImgHeight, new Paint());
+        drawText(canvas, item.getDescription(), 250, descImgHeight, 15,
                 false, false);
     }
 
