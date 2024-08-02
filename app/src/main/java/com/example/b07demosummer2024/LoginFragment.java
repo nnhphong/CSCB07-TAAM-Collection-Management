@@ -61,10 +61,12 @@ public class LoginFragment extends Fragment {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String username = usernameTxt.getText().toString();
+                String password = passwordTxt.getText().toString();
                 db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
                 ref = db.getReference("/user_info");
                 DBOperation op = new DBOperation(ref);
-                op.login(usernameTxt, passwordTxt).addOnCompleteListener(new OnCompleteListener<List<User>>() {
+                op.login(username, password).addOnCompleteListener(new OnCompleteListener<List<User>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<User>> task) {
                         List<User> res = task.getResult();

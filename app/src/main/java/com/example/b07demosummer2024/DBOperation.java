@@ -3,9 +3,6 @@ package com.example.b07demosummer2024;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import android.util.Log;
-import android.widget.EditText;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -243,7 +240,7 @@ public class DBOperation {
         });
     }
 
-    public Task<List<User>> login(EditText username, EditText password) {
+    public Task<List<User>> login(String username, String password) {
         TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
         List<User> user_list = new ArrayList<>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -254,12 +251,12 @@ public class DBOperation {
                     if (user == null) {
                         continue;
                     }
-                    if (!user.getUsername().isEmpty() && !username.getText().toString().isEmpty() &&
-                            !Objects.equals(user.getUsername(), username.getText().toString())) {
+                    if (!user.getUsername().isEmpty() && !username.isEmpty() &&
+                            !Objects.equals(user.getUsername(), username)) {
                         continue;
                     }
-                    if (!user.getPassword().isEmpty() && !password.getText().toString().isEmpty() &&
-                            !Objects.equals(user.getPassword(), password.getText().toString())) {
+                    if (!user.getPassword().isEmpty() && !password.isEmpty() &&
+                            !Objects.equals(user.getPassword(), password)) {
                         continue;
                     }
                     user_list.add(user);
