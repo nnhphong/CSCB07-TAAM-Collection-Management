@@ -73,13 +73,13 @@ public class PreLoginFragment extends Fragment{
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LoginFragment());
+                loadFragment(new LoginView());
             }
         });
 
         btnSearchFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 loadFragment(new SearchFragment());
             }
         });

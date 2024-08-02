@@ -1,18 +1,20 @@
 package com.example.b07demosummer2024;
 
+import com.google.android.gms.tasks.Task;
+
+import java.util.List;
+
 public interface Contract {
-    interface View {
-        void setString(String string);
+    interface Model {
+        Task<List<User>> login(String username, String password);
     }
 
-    interface Model {
-        interface OnFinishedListener {
-            void onFinished(String string);
-        }
-        void getNextCourse(Contract.Model.OnFinishedListener onFinishedListener);
+    interface View {
+        void onSuccess();
+        void onFailure();
     }
 
     interface Presenter {
-        void onButtonClick();
+        void onButtonClick(String username, String password);
     }
 }
