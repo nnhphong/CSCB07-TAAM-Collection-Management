@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment {
         Button btnAdd = view.findViewById(R.id.btnAdd);
         Button btnReport = view.findViewById(R.id.btnReport);
         Button btnView = view.findViewById(R.id.btnView);
-        Button btnLogin = view.findViewById(R.id.btnLogin);
         Button btnRemove = view.findViewById(R.id.btnRemove);
         txtKeywordSearch = view.findViewById(R.id.txtKeywordSearch);
 
@@ -86,12 +85,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {}
         });
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {}
-        });
-
 
         btnReport.setOnClickListener(new View.OnClickListener() {
             @Override

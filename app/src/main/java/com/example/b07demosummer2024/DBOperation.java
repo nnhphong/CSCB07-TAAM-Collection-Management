@@ -3,8 +3,6 @@ package com.example.b07demosummer2024;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -230,5 +228,34 @@ public class DBOperation {
                 System.out.println("WTF");
             }
         });
+    }
+
+    public Task<List<User>> login(String username, String password) {
+        TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
+        List<User> user_list = new ArrayList<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot users : snapshot.getChildren()) {
+                    User user = users.getValue(User.class);
+                    if (user == null) {
+                        continue;
+                    }
+                    if (!user.getUsername().isEmpty() && !username.isEmpty() &&
+                            !Objects.equals(user.getUsername(), username)) {
+                        continue;
+                    }
+                    if (!user.getPassword().isEmpty() && !password.isEmpty() &&
+                            !Objects.equals(user.getPassword(), password)) {
+                        continue;
+                    }
+                    user_list.add(user);
+                }
+                tcs.setResult(user_list);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+        return tcs.getTask();
     }
 }
