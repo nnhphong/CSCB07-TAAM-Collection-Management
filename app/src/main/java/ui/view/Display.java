@@ -12,10 +12,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.b07demosummer2024.HomeFragment;
-import com.example.b07demosummer2024.Item;
-import com.example.b07demosummer2024.ItemAdapter;
-import com.example.b07demosummer2024.R;
+import cscb07.taam_project.HomeFragment;
+import cscb07.taam_project.Item;
+import cscb07.taam_project.ItemAdapter;
+import cscb07.taam_project.R;
 
 import java.util.List;
 

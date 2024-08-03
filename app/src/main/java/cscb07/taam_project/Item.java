@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 public class Item implements Comparable<Item> {
     private Integer lot_number;

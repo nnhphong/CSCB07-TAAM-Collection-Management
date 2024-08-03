@@ -1,22 +1,15 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.net.Uri;
-import android.provider.ContactsContract;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.StorageReference;
@@ -29,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Collections;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import data.StringFilter;
 
