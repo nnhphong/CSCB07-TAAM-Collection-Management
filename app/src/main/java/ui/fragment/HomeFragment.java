@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ktx.Firebase;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashSet;
@@ -175,15 +176,9 @@ public class HomeFragment extends Fragment {
         txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
-                    Task<List<Item>> tsk = handleKeywordSearch(txtKeywordSearch.getText().toString());
-                    tsk.addOnCompleteListener(new OnCompleteListener<List<Item>>() {
-                        @Override
-                        public void onComplete(@NonNull Task<List<Item>> task) {
-                            List<Item> result = task.getResult();
-                            display.displaySearchRes(inflater, container, savedInstanceState, result);
-                        }
-                    });
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
+                    display.displaySearchRes(inflater, container, savedInstanceState, result);
                     return true;
                 }
                 return false;
@@ -201,7 +196,20 @@ public class HomeFragment extends Fragment {
 
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {}
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    // Show a message to the user to select an item first
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0); // Assuming you only want to view one item at a time
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber; // Generate the ID as "id" + lot number
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+                }
+            }
         });
 
         btnReport.setOnClickListener(new View.OnClickListener() {
@@ -234,8 +242,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private Task<List<Item>> handleKeywordSearch(String keyword) {
-        TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
+    private List<Item> handleKeywordSearch(String keyword) {
         List<Item> searchResult = new ArrayList<>();
         keywordSearchByLotNum(keyword).continueWithTask(task -> {
             if (task.isSuccessful()) {
