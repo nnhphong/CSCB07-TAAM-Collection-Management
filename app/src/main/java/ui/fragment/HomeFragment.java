@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ktx.Firebase;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashSet;
@@ -215,25 +216,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadFragment(new AddItemFragment());
-            }
-        });
-
-        btnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Item> selectedItems = itemAdapter.getSelected();
-                if (selectedItems.isEmpty()) {
-                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
-                } else {
-                    Item selectedItem = selectedItems.get(0);
-                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
-                    String itemId = "id" + lotNumber;
-
-                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
-                    loadFragment(fragment);
-
-                }
-
             }
         });
 
