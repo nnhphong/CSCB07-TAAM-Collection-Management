@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
 
         if (savedInstanceState == null) {
-            loadFragment(new PreLoginFragment());
+            loadFragment(new HomeFragment(false));
         }
     }
 

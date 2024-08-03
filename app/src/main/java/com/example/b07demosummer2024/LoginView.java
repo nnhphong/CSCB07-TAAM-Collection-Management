@@ -55,7 +55,7 @@ public class LoginView extends Fragment {
 
     public void onSuccess() {
         Toast.makeText(getActivity(), "Log In Successful", Toast.LENGTH_SHORT).show();
-        loadFragment(new HomeFragment());
+        loadFragment(new HomeFragment(true));
     }
 
     public void onFailure() {

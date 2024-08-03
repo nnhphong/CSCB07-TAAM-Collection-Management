@@ -43,6 +43,12 @@ public class Display {
         }
     }
 
+    public void deleteItemFromView(View obj) {
+        obj.setEnabled(false);
+        ViewGroup parent = (ViewGroup) obj.getParent();
+        parent.removeView(obj);
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = displayOn.getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);

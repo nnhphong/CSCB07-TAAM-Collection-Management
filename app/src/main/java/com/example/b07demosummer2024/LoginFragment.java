@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment {
                         else {
                             Toast.makeText(getActivity(),
                                     "Log In Successful", Toast.LENGTH_LONG).show();
-                            loadFragment(new HomeFragment());
+                            loadFragment(new HomeFragment(true));
                         }
                     }
                 });
