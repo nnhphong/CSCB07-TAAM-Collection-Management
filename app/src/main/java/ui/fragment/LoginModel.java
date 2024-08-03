@@ -1,5 +1,4 @@
 package ui.fragment;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DatabaseError;

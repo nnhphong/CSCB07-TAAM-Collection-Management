@@ -1,5 +1,4 @@
 package data.database;
-
 public class User {
     String username, password;
 

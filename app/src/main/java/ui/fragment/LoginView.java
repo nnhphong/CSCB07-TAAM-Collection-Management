@@ -1,5 +1,4 @@
 package ui.fragment;
-
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
