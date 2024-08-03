@@ -10,7 +10,6 @@ public class Item implements Comparable<Item> {
     private String mediaType;
     private boolean selected;
 
-
     public Item() {
         lot_number = null;
         name = "";

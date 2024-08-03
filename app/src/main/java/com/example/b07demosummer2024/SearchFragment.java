@@ -79,7 +79,6 @@ public class SearchFragment extends Fragment {
         op = new DBOperation(ref);
 
         Display display = new Display(this);
-
         addDropDownValue(view);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +120,6 @@ public class SearchFragment extends Fragment {
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
                         result.sort(null);
-
                         display.displaySearchRes(inflater, container, savedInstanceState,
                                 result);
                     }
