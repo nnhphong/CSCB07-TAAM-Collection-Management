@@ -1,5 +1,4 @@
 package ui.fragment;
-
 import androidx.annotation.NonNull;
 
 import java.util.List;
