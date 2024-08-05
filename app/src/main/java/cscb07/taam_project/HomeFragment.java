@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -166,8 +167,9 @@ public class HomeFragment extends Fragment {
         txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                System.out.println(event.getKeyCode() + " " + KeyEvent.KEYCODE_ENTER);
-                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                System.out.println(event.getKeyCode() + " " + KeyEvent.KEYCODE_ENTER);
+
+                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
                     List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
                     display.displaySearchRes(inflater, container, savedInstanceState, result);
                     return true;
