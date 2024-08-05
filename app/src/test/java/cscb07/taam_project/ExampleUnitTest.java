@@ -1,4 +1,4 @@
-package com.example.cscb07_taam_project;
+package cscb07.taam_project;
 
 import org.junit.Test;
 
