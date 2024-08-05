@@ -20,12 +20,17 @@ public class LoginPresenter implements Contract.Presenter{
 
     @Override
     public void onButtonClick(String username, String password) {
-        Task<List<User>> task = model.login(username, password);
-        task.addOnCompleteListener(new OnCompleteListener<List<User>>() {
+        Task<User> task = model.login(username, password);
+        task.addOnCompleteListener(new OnCompleteListener<User>() {
             @Override
-            public void onComplete(@NonNull Task<List<User>> task) {
-                List<User> res = task.getResult();
-                if (res.isEmpty()) {
+            public void onComplete(@NonNull Task<User> task) {
+                User res = task.getResult();
+                if (res != null) {
+                    System.out.println(res.getUsername());
+                } else {
+                    System.out.println("it's null");
+                }
+                if (res == null) {
                     view.onFailure();
                 }
                 else {
