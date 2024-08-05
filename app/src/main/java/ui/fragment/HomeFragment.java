@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -174,9 +175,15 @@ public class HomeFragment extends Fragment {
         txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
-                    display.displaySearchRes(inflater, container, savedInstanceState, result);
+                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
+                    Task<List<Item>> tsk = handleKeywordSearch(txtKeywordSearch.getText().toString());
+                    tsk.addOnCompleteListener(new OnCompleteListener<List<Item>>() {
+                        @Override
+                        public void onComplete(@NonNull Task<List<Item>> task) {
+                            List<Item> result = task.getResult();
+                            display.displaySearchRes(inflater, container, savedInstanceState, result);
+                        }
+                    });
                     return true;
                 }
                 return false;
@@ -240,7 +247,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private List<Item> handleKeywordSearch(String keyword) {
+    private Task<List<Item>> handleKeywordSearch(String keyword) {
+        TaskCompletionSource<List<Item>> tcs = new TaskCompletionSource<>();
         List<Item> searchResult = new ArrayList<>();
         keywordSearchByLotNum(keyword).continueWithTask(task -> {
             if (task.isSuccessful()) {
