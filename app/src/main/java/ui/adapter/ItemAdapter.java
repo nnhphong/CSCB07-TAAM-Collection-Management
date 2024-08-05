@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -20,6 +20,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import data.database.Item;
+import cscb07.taam_project.R;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
     private final List<Item> itemList;

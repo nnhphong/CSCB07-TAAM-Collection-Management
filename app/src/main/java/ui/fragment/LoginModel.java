@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import data.database.User;
 
 public class LoginModel implements Contract.Model {
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");

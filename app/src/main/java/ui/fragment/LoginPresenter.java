@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import androidx.annotation.NonNull;
 
@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import data.database.User;
 
 public class LoginPresenter implements Contract.Presenter{
     private LoginModel model;

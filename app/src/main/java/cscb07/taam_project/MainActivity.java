@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import ui.fragment.HomeFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase db;

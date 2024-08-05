@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import cscb07.taam_project.R;
 
 public class LoginView extends Fragment {
     private EditText usernameTxt, passwordTxt;

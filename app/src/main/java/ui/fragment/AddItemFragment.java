@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -36,6 +36,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cscb07.taam_project.R;
+import data.database.DBOperation;
+import data.database.Item;
 
 public class AddItemFragment extends Fragment {
     // Elements of fragment

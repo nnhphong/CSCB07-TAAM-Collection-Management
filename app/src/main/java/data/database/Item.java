@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package data.database;
 
 public class Item implements Comparable<Item> {
     private Integer lot_number;

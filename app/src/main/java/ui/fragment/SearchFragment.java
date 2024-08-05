@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 import com.google.firebase.database.ValueEventListener;
 
+import cscb07.taam_project.R;
+import data.database.DBOperation;
+import data.database.Item;
 import ui.view.Display;
 
 public class SearchFragment extends Fragment {

@@ -12,9 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import cscb07.taam_project.HomeFragment;
-import cscb07.taam_project.Item;
-import cscb07.taam_project.ItemAdapter;
+import ui.fragment.HomeFragment;
+import data.database.Item;
+import ui.adapter.ItemAdapter;
 import cscb07.taam_project.R;
 
 import java.util.List;

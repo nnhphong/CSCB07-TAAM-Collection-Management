@@ -1,12 +1,10 @@
-package data;
+package data.pdf;
 import android.content.Context;
 import android.os.Bundle;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
-import android.print.PrintManager;
-import android.print.pdf.PrintedPdfDocument;
 import android.os.ParcelFileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

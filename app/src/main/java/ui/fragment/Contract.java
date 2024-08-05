@@ -1,8 +1,10 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
+
+import data.database.User;
 
 public interface Contract {
     interface Model {

@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package data.database;
 
 import android.net.Uri;
 
@@ -17,13 +17,14 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Collections;
 
-import data.StringFilter;
+import ui.fragment.AddItemFragment;
+import data.string.StringFilter;
+import ui.adapter.ItemAdapter;
 
 public class DBOperation {
     private final DatabaseReference ref;

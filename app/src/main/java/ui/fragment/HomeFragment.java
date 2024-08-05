@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -28,6 +28,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.List;
 import java.util.ArrayList;
 
+import cscb07.taam_project.R;
+import data.database.DBOperation;
+import data.database.Item;
+import ui.adapter.ItemAdapter;
 import ui.view.Display;
 
 public class HomeFragment extends Fragment {

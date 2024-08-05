@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,7 +29,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import data.PDFGenerator;
+import cscb07.taam_project.R;
+import data.pdf.PDFGenerator;
+import data.database.DBOperation;
+import data.database.Item;
 
 public class ReportFragment extends Fragment {
     View view;

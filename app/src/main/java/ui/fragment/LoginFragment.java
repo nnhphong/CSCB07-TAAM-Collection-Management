@@ -1,4 +1,4 @@
-package cscb07.taam_project;
+package ui.fragment;
 
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -22,6 +22,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+
+import cscb07.taam_project.R;
+import data.database.DBOperation;
+import data.database.User;
 
 public class LoginFragment extends Fragment {
     private FirebaseDatabase db;
