@@ -136,12 +136,12 @@ public class DBOperation {
                 !Objects.equals(criteria.getPeriod(), item.getPeriod())) {
             return false;
         }
-        if (!criteria.getDescription().isEmpty()) {
-            System.out.println(criteria.getDescription());
-            System.out.println(item.getDescription());
-            System.out.println(StringFilter.matchByRegex(criteria.getDescription(),
-                    item.getDescription()));
-        }
+//        if (!criteria.getDescription().isEmpty()) {
+//            System.out.println(criteria.getDescription());
+//            System.out.println(item.getDescription());
+//            System.out.println(StringFilter.matchByRegex(criteria.getDescription(),
+//                    item.getDescription()));
+//        }
         return criteria.getDescription().isEmpty() || StringFilter.matchByRegex(criteria.getDescription(),
                 item.getDescription());
     }

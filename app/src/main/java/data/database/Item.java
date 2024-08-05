@@ -1,5 +1,7 @@
 package data.database;
 
+import java.util.Objects;
+
 public class Item implements Comparable<Item> {
     private Integer lot_number;
     private String name;
@@ -46,5 +48,17 @@ public class Item implements Comparable<Item> {
     @Override
     public int compareTo(Item item) {
         return this.lot_number.compareTo(item.lot_number);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Item item = (Item) obj;
+        return this.hashCode() == item.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(lot_number);
     }
 }
