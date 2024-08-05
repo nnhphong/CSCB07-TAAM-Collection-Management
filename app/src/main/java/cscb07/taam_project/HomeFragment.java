@@ -49,6 +49,8 @@ public class HomeFragment extends Fragment {
     private Button btnLogin;
     private ImageButton btnSearchFilter;
 
+    public HomeFragment() {}
+
     public HomeFragment(boolean isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
     }
@@ -68,7 +70,10 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+        // DBSingleton dbSingleton = DBSingleton.getDBInstance();
+        // op = new DBOperation(dbSingleton.db_ref, dbSingleton.storage_ref);
         op = new DBOperation(db.getReference("data"), storage.getReference("/"));
+
 
         display = new Display(this);
 
@@ -111,55 +116,17 @@ public class HomeFragment extends Fragment {
                                     @Nullable Bundle savedInstanceState) {
         btnSearchFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 loadFragment(new SearchFragment());
             }
         });
 
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 List<Item> selected = itemAdapter.getSelected();
-
-                if (selected.isEmpty()) {
-                    displayToast("Please select an item to remove");
-                    return;
-                }
-
-                String ids = "";
-
-                for (int i = 0; i < selected.size(); i++) {
-                    ids += selected.get(i).getLotNumber();
-
-                    if (i < selected.size() - 1) {
-                        ids += ", ";
-                    }
-                }
-
-                AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
-                removePopup.setTitle("Remove Items");
-                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
-                removePopup.setPositiveButton("Yes", (dialog, which) -> {
-                    for (Item item : selected) {
-                        op.removeItem(item).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                op.removeImage(item).addOnCompleteListener(addTask -> {
-                                    if (!addTask.isSuccessful()) {
-                                        displayToast("Removing image failed: Lot Number " + item.getLotNumber());
-                                        return;
-                                    }
-                                });
-                            } else {
-                                displayToast("Removing item failed: Lot Number " + item.getLotNumber());
-                                return;
-                            }
-                        });
-                    }
-
-                    displayToast("Successfully removed " + selected.size() + " items");
-                });
-                removePopup.setNegativeButton("No", null);
-                removePopup.show();
+                Remove removeTask = new Remove(selected, op, view);
+                removeTask.remove();
             }
         });
 
@@ -198,11 +165,22 @@ public class HomeFragment extends Fragment {
         });
 
         // In this context, button Login will be changed to button Logout
-        btnLogin.setText("Logout");
+        btnLogin.setText("Log Out");
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Todo: Implement logout function in here
+                AlertDialog.Builder logoutPopup = new AlertDialog.Builder(view.getContext());
+                logoutPopup.setTitle("Logging out");
+                logoutPopup.setMessage("Are you sure you want to log out?");
+                // logoutPopup.setPositiveButton("Yes", null);
+                logoutPopup.setPositiveButton("Yes", (dialog, which) -> {
+                    isLoggedIn = false;
+                    hideAdminFunctions(view);
+                    btnLogin.setText("Log In");
+                });
+                logoutPopup.setNegativeButton("No", null);
+                logoutPopup.show();
             }
         });
     }

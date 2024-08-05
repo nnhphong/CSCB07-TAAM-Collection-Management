@@ -109,11 +109,21 @@ public class DBOperation {
 
         return uploadTask;
     }
+  
+    public Task<Void> addItem(Item item, AddItemFragment fragment) {
+        String id = "id" + item.getLotNumber();
 
-    public Task<Void> addItem(Map toAdd, AddItemFragment fragment) {
-        String id = "id" + toAdd.get("lotNumber");
+        // Only store these fields in the database
+        Map<String, Object> itemMap = new HashMap<>();
+        itemMap.put("lotNumber", item.getLotNumber());
+        itemMap.put("name", item.getName());
+        itemMap.put("category", item.getCategory());
+        itemMap.put("period", item.getPeriod());
+        itemMap.put("description", item.getDescription());
+        itemMap.put("mediaLink", item.getMediaLink());
+        itemMap.put("mediaType", item.getMediaType());
 
-        return ref.child(id).setValue(toAdd).addOnCompleteListener(task -> {
+        return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
         });
     }
 

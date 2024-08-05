@@ -33,9 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AddItemFragment extends Fragment {
     // Elements of fragment
@@ -90,10 +88,6 @@ public class AddItemFragment extends Fragment {
         op.getCategories().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> categories = task.getResult();
-
-                String[] categoryArr = getResources().getStringArray(R.array.arr_category);
-                addToList(categories, categoryArr);
-
                 categories.sort(null);
 
                 ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
@@ -106,10 +100,6 @@ public class AddItemFragment extends Fragment {
         op.getPeriods().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> periods = task.getResult();
-
-                String[] periodArr = getResources().getStringArray(R.array.arr_period);
-                addToList(periods, periodArr);
-
                 periods.sort(null);
 
                 ArrayAdapter<String> period_adapter = new ArrayAdapter<>(getActivity(),
@@ -214,24 +204,30 @@ public class AddItemFragment extends Fragment {
     }
 
     private void addItem() {
-        String lotNumberStr = lotNumberInput.getText().toString();
-        int lotNumber = Integer.parseInt(lotNumberStr);
+        String lotNumber = lotNumberInput.getText().toString();
         String name = nameInput.getText().toString();
         String description = descriptionInput.getText().toString();
         String category = categoryInput.getText().toString();
         String period = periodInput.getText().toString();
 
-        checkEmpty(lotNumberStr, name, description, category, period);
+        if (lotNumber.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty()) {
+            displayToast("Please fill out all fields");
+            return;
+        } else if (selectedMedia == null) {
+            displayToast("Please select an image");
+            return;
+        }
 
+        Item toAdd = new Item(Integer.parseInt(lotNumber), name, category, period, description);
         Item lotNumberCheck = new Item();
-        lotNumberCheck.setLotNumber(lotNumber);
+        lotNumberCheck.setLotNumber(toAdd.getLotNumber());
 
         op.searchItem(lotNumberCheck).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Item> sameLotNumber = task.getResult();
 
                 if (sameLotNumber.isEmpty()) {
-                    UploadTask uploadTask = op.addImage(selectedMedia, this, lotNumber);
+                    UploadTask uploadTask = op.addImage(selectedMedia, this, toAdd.getLotNumber());
 
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -244,14 +240,15 @@ public class AddItemFragment extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             if (uploadTask.isSuccessful()) {
-                                Map toAdd = new HashMap<String, Object>();
+                                ContentResolver content = getActivity().getContentResolver();
 
-                                toAdd.put("lotNumber", lotNumber);
-                                toAdd.put("name", name);
-                                toAdd.put("category", category);
-                                toAdd.put("period", period);
-                                toAdd.put("description", description);
-                                toAdd.put("mediaLink", "media/id" + lotNumber);
+                                if (content.getType(selectedMedia).startsWith("image/")) {
+                                    toAdd.setMediaType("image");
+                                } else {
+                                    toAdd.setMediaType("video");
+                                }
+
+                                toAdd.setMediaLink("media/id" + toAdd.getLotNumber());
 
                                 op.addItem(toAdd, AddItemFragment.this).addOnCompleteListener(addTask -> {
                                     if (addTask.isSuccessful()) {
@@ -269,24 +266,6 @@ public class AddItemFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void addToList(List<String> list, String[] arr) {
-        for (String str : arr) {
-            if (!list.contains(str)) {
-                list.add(str);
-            }
-        }
-    }
-
-    private void checkEmpty(String lotNumberStr, String name, String description, String category, String period) {
-        if (lotNumberStr.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty()) {
-            displayToast("Please fill out all fields");
-            return;
-        } else if (selectedMedia == null) {
-            displayToast("Please select an image");
-            return;
-        }
     }
 
     public void displayToast(String message) {

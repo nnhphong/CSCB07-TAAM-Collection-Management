@@ -25,10 +25,7 @@ public class LoginView extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        usernameTxt = view.findViewById(R.id.username_input);
-        passwordTxt = view.findViewById(R.id.password_input);
-        login_button = view.findViewById(R.id.login_button);
-        togglePasswordVisibility = view.findViewById(R.id.is_visible);
+        getAllViews(view);
         // Hide the password initially
         passwordTxt.setTransformationMethod(PasswordTransformationMethod.getInstance());
         togglePasswordVisibility.setOnCheckedChangeListener((buttonView, isPasswordVisible) -> {
@@ -51,6 +48,13 @@ public class LoginView extends Fragment {
             }
         });
         return view;
+    }
+
+    private void getAllViews(View view) {
+        usernameTxt = view.findViewById(R.id.username_input);
+        passwordTxt = view.findViewById(R.id.password_input);
+        login_button = view.findViewById(R.id.login_button);
+        togglePasswordVisibility = view.findViewById(R.id.is_visible);
     }
 
     public void onSuccess() {
