@@ -53,21 +53,19 @@ public class LoginUnitTest {
     @Test
     public void testLoginSuccess() {
         User testUser = new User("thomas", "123");
-        List<User> userList = new ArrayList<>();
-        userList.add(testUser);
 
-        Task<List<User>> mockedTask = mock(Task.class);
+        Task<User> mockedTask = mock(Task.class);
         when(loginModelMock.login("thomas", "123")).thenReturn(mockedTask);
 
         doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) {
-                OnCompleteListener<List<User>> listener = invocation.getArgument(0);
+                OnCompleteListener<User> listener = invocation.getArgument(0);
                 listener.onComplete(mockedTask);
                 return null;
             }
         }).when(mockedTask).addOnCompleteListener(any());
 
-        when(mockedTask.getResult()).thenReturn(userList);
+        when(mockedTask.getResult()).thenReturn(testUser);
 
         loginPresenter.onButtonClick("thomas", "123");
 
@@ -76,25 +74,21 @@ public class LoginUnitTest {
 
     @Test
     public void testLoginFailure() {
-        Task<List<User>> mockedTask = mock(Task.class);
+        Task<User> mockedTask = mock(Task.class);
         when(loginModelMock.login("thomas", "123")).thenReturn(mockedTask);
 
-        // Setup an Answer to manually trigger the OnCompleteListener
         doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) {
-                OnCompleteListener<List<User>> listener = invocation.getArgument(0, OnCompleteListener.class);
-                listener.onComplete(mockedTask); // Manually trigger onComplete
+                OnCompleteListener<User> listener = invocation.getArgument(0);
+                listener.onComplete(mockedTask);
                 return null;
             }
-        }).when(mockedTask).addOnCompleteListener(any(OnCompleteListener.class));
+        }).when(mockedTask).addOnCompleteListener(any());
 
-        // Configure the mocked Task to simulate a login failure
-        when(mockedTask.getResult()).thenReturn(new ArrayList<>()); // Return an empty user list
+        when(mockedTask.getResult()).thenReturn(null);
 
-        // Call the method under test
         loginPresenter.onButtonClick("thomas", "123");
 
-        // Verify that onFailure was called on the view
         verify(loginViewMock).onFailure();
     }
 }

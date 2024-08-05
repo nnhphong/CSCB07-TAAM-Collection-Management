@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Contract {
     interface Model {
-        Task<List<User>> login(String username, String password);
+        Task<User> login(String username, String password);
     }
 
     interface View {
