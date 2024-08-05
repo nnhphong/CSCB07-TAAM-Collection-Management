@@ -137,10 +137,4 @@ public class SearchFragment extends Fragment {
 
         return view;
     }
-
-    private void displayInfo(List<Item> l) {
-        for (Item item : l) {
-            System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
-        }
-    }
 }
