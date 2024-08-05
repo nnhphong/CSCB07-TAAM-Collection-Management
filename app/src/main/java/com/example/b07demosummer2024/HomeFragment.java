@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,8 +19,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -112,33 +117,61 @@ public class HomeFragment extends Fragment {
                     return;
                 }
 
-                String ids = "";
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                View dialogView = inflater.inflate(R.layout.dialog_remove_items, null);
+                LinearLayout imageContainer = dialogView.findViewById(R.id.imageContainer);
 
-                for (int i = 0; i < selected.size(); i++) {
-                    ids += selected.get(i).getLotNumber();
+                for (Item key : selected) {
+                    Integer id = key.getLotNumber();
+                    TextView textView = new TextView(getContext());
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    textView.setText(String.format("Lot Number: %d", id));
+                    int paddingDp = 8;  // 8dp padding
+                    int paddingPx = (int) (paddingDp * getResources().getDisplayMetrics().density);
+                    textView.setPadding(paddingPx, paddingPx, paddingPx, 0);
+                    imageContainer.addView(textView);
 
-                    if (i < selected.size() - 1) {
-                        ids += ", ";
-                    }
+                    ImageView imageView = new ImageView(getContext());
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    layoutParams.setMargins(0, 0, 0, paddingPx);  // Reduce margin between image and next text
+                    imageView.setLayoutParams(layoutParams);
+                    imageContainer.addView(imageView);
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
+                    StorageReference fileRef = storage.getReference("/").child(key.getMediaLink());
+
+                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Glide.with(getContext()).load(uri.toString()).into(imageView);
+
+                    }).addOnFailureListener(e -> {
+                        displayToast("Fail to load images");
+                    });
                 }
 
                 AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
                 removePopup.setTitle("Remove Items");
-                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
+                removePopup.setView(dialogView);
+//                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
                 removePopup.setPositiveButton("Yes", (dialog, which) -> {
                     for (Item item : selected) {
                         op.removeItem(item).addOnCompleteListener(task -> {
-                           if (task.isSuccessful()) {
+                            if (task.isSuccessful()) {
                                 op.removeImage(item).addOnCompleteListener(addTask -> {
-                                   if (!addTask.isSuccessful()) {
-                                       displayToast("Removing image failed: Lot Number " + item.getLotNumber());
-                                       return;
-                                   }
+                                    if (!addTask.isSuccessful()) {
+                                        displayToast("Removing image failed: Lot Number " + item.getLotNumber());
+                                        return;
+                                    }
                                 });
-                           } else {
-                               displayToast("Removing item failed: Lot Number " + item.getLotNumber());
-                               return;
-                           }
+                            } else {
+                                displayToast("Removing item failed: Lot Number " + item.getLotNumber());
+                                return;
+                            }
                         });
                     }
 
