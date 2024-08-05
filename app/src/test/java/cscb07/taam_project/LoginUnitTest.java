@@ -59,7 +59,7 @@ public class LoginUnitTest {
 
         doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) {
-                OnCompleteListener<User> listener = invocation.getArgument(0, OnCompleteListener.class);
+                OnCompleteListener<User> listener = invocation.getArgument(0);
                 listener.onComplete(mockedTask);
                 return null;
             }
