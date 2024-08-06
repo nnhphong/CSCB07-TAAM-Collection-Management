@@ -225,7 +225,9 @@ public class AddItemFragment extends Fragment {
         String category = categoryInput.getText().toString();
         String period = periodInput.getText().toString();
 
-        checkEmpty(lotNumberStr, name, description, category, period);
+        if (checkEmpty(lotNumberStr, name, description, category, period)) {
+            return;
+        }
 
         Item lotNumberCheck = new Item();
         lotNumberCheck.setLotNumber(lotNumber);
@@ -283,14 +285,16 @@ public class AddItemFragment extends Fragment {
         }
     }
 
-    private void checkEmpty(String lotNumberStr, String name, String description, String category, String period) {
+    private boolean checkEmpty(String lotNumberStr, String name, String description, String category, String period) {
         if (lotNumberStr.isEmpty() || name.isEmpty() || description.isEmpty() || category.isEmpty() || period.isEmpty()) {
             displayToast("Please fill out all fields");
-            return;
+            return true;
         } else if (selectedMedia == null) {
             displayToast("Please select an image");
-            return;
+            return true;
         }
+
+        return false;
     }
 
     public void displayToast(String message) {
