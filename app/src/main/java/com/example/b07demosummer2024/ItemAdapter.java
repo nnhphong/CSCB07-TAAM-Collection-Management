@@ -64,13 +64,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             }
         });
 
-        // adding to initialize the state of the checkbox and changing if it has been selected
-        holder.itemCheckedBox.setChecked(item.isSelected());
+        holder.itemCheckBox.setChecked(item.getSelected());
 
-        holder.itemCheckedBox.setOnClickListener(new View.OnClickListener() {
+        holder.itemCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item.setSelected(!item.isSelected());
+                item.setSelected(!item.getSelected());
             }
         });
     }
@@ -84,7 +83,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         List<Item> selected = new ArrayList<>();
 
         for (Item item : itemList) {
-            if (item.isSelected()) {
+            if (item.getSelected()) {
                 selected.add(item);
             }
         }
@@ -95,8 +94,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView itemTextViewLotNumber, itemTextViewName, itemTextViewPeriod, itemTextViewDescription;
         ImageView itemImageView;
-        CheckBox itemCheckedBox;
-
+        CheckBox itemCheckBox;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             itemTextViewLotNumber = itemView.findViewById(R.id.itemTextViewLotNumber);
@@ -104,7 +102,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             itemTextViewPeriod = itemView.findViewById(R.id.itemTextViewPeriod);
             itemTextViewDescription = itemView.findViewById(R.id.itemTextViewDescription);
             itemImageView = itemView.findViewById(R.id.itemImageView);
-            itemCheckedBox = itemView.findViewById(R.id.itemCheckBox);
+            itemCheckBox = itemView.findViewById(R.id.itemCheckBox);
         }
     }
 }

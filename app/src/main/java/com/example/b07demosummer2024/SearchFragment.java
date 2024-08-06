@@ -33,15 +33,38 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import ui.view.Display;
+
 public class SearchFragment extends Fragment {
     private FirebaseDatabase db;
     private DBOperation op;
-    public void addDropDownValue(View view, int dropDownID, int arrValuesID) {
-        Spinner spinner = view.findViewById(dropDownID);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                arrValuesID, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    public void addDropDownValue(View view) {
+        Spinner categoryDropdown = view.findViewById(R.id.dropDownCategory);
+        Spinner periodDropdown = view.findViewById(R.id.dropDownPeriod);
+
+        op.getCategories().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> categories = task.getResult();
+                categories.sort(null);
+
+                ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, categories);
+                category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                categoryDropdown.setAdapter(category_adapter);
+            }
+        });
+
+        op.getPeriods().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> periods = task.getResult();
+                periods.sort(null);
+
+                ArrayAdapter<String> period_adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, periods);
+                period_adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                periodDropdown.setAdapter(period_adapter);
+            }
+        });
     }
 
     @Nullable
@@ -51,12 +74,12 @@ public class SearchFragment extends Fragment {
         Button btnTop = view.findViewById(R.id.btnTop);
         ImageButton btnSearch = view.findViewById(R.id.btnSearch);
 
-        addDropDownValue(view, R.id.dropDownCategory, R.array.arr_category);
-        addDropDownValue(view, R.id.dropDownPeriod, R.array.arr_period);
-
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         DatabaseReference ref = db.getReference("/data");
         op = new DBOperation(ref);
+
+        Display display = new Display(this);
+        addDropDownValue(view);
 
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,9 +119,8 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<List<Item>> task) {
                         List<Item> result = task.getResult();
-                        // TODO: displaying search result here
-                        displayInfo(result);
-                        displaySearchRes(inflater, container, savedInstanceState,
+                        result.sort(null);
+                        display.displaySearchRes(inflater, container, savedInstanceState,
                                 result);
                     }
                 });
@@ -128,24 +150,5 @@ public class SearchFragment extends Fragment {
         for (Item item : l) {
             System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
-    }
-
-    public void displaySearchRes(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState, List<Item> itemList) {
-        View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.mainRecyclerView);
-        ItemAdapter itemAdapter = new ItemAdapter(itemList, getContext());
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(itemAdapter);
-
-        loadFragment(new HomeFragment(itemList));
-    }
-
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }
