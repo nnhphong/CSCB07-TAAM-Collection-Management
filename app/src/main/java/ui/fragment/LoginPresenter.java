@@ -25,11 +25,6 @@ public class LoginPresenter implements Contract.Presenter{
             @Override
             public void onComplete(@NonNull Task<User> task) {
                 User res = task.getResult();
-                if (res != null) {
-                    System.out.println(res.getUsername());
-                } else {
-                    System.out.println("it's null");
-                }
                 if (res == null) {
                     view.onFailure();
                 }
