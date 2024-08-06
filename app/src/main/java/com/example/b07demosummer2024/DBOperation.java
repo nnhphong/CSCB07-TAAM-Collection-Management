@@ -1,22 +1,15 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.net.Uri;
-import android.provider.ContactsContract;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.StorageReference;
@@ -29,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Collections;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import data.StringFilter;
 
@@ -118,21 +109,11 @@ public class DBOperation {
 
         return uploadTask;
     }
-  
-    public Task<Void> addItem(Item item, AddItemFragment fragment) {
-        String id = "id" + item.getLotNumber();
 
-        // Only store these fields in the database
-        Map<String, Object> itemMap = new HashMap<>();
-        itemMap.put("lotNumber", item.getLotNumber());
-        itemMap.put("name", item.getName());
-        itemMap.put("category", item.getCategory());
-        itemMap.put("period", item.getPeriod());
-        itemMap.put("description", item.getDescription());
-        itemMap.put("mediaLink", item.getMediaLink());
-        itemMap.put("mediaType", item.getMediaType());
+    public Task<Void> addItem(Map toAdd, AddItemFragment fragment) {
+        String id = "id" + toAdd.get("lotNumber");
 
-        return ref.child(id).setValue(itemMap).addOnCompleteListener(task -> {
+        return ref.child(id).setValue(toAdd).addOnCompleteListener(task -> {
         });
     }
 
@@ -228,34 +209,5 @@ public class DBOperation {
                 System.out.println("WTF");
             }
         });
-    }
-
-    public Task<List<User>> login(String username, String password) {
-        TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
-        List<User> user_list = new ArrayList<>();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot users : snapshot.getChildren()) {
-                    User user = users.getValue(User.class);
-                    if (user == null) {
-                        continue;
-                    }
-                    if (!user.getUsername().isEmpty() && !username.isEmpty() &&
-                            !Objects.equals(user.getUsername(), username)) {
-                        continue;
-                    }
-                    if (!user.getPassword().isEmpty() && !password.isEmpty() &&
-                            !Objects.equals(user.getPassword(), password)) {
-                        continue;
-                    }
-                    user_list.add(user);
-                }
-                tcs.setResult(user_list);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-        return tcs.getTask();
     }
 }

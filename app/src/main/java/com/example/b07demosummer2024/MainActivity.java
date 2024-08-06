@@ -1,20 +1,13 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.widget.Button;
 import android.view.View;
-import android.content.Intent;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
 
         if (savedInstanceState == null) {
-            loadFragment(new PreLoginFragment());
+            loadFragment(new HomeFragment(false));
         }
     }
 

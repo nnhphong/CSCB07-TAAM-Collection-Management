@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -55,7 +55,7 @@ public class LoginView extends Fragment {
 
     public void onSuccess() {
         Toast.makeText(getActivity(), "Log In Successful", Toast.LENGTH_SHORT).show();
-        loadFragment(new HomeFragment());
+        loadFragment(new HomeFragment(true));
     }
 
     public void onFailure() {

@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import androidx.annotation.NonNull;
 
@@ -22,9 +22,10 @@ public class LoginModel implements Contract.Model {
     public LoginModel() {}
 
     public Task<List<User>> login(String username, String password) {
+        DBSingleton dbSingleton = DBSingleton.getDBInstance();
         TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
         List<User> user_list = new ArrayList<>();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbSingleton.db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot users : snapshot.getChildren()) {

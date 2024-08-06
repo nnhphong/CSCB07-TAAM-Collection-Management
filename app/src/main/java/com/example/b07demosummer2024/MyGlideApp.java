@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;

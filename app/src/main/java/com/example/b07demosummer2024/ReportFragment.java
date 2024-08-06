@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -64,10 +63,8 @@ public class ReportFragment extends Fragment {
         dropDownPeriod = view.findViewById(R.id.dropDownPeriod);
         ckbDescImgOnly = view.findViewById(R.id.ckbDescPicOnly);
 
-        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        DatabaseReference FBref = db.getReference("/data");
-        StorageReference ref = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com").getReference();
-        op = new DBOperation(FBref);
+        DBSingleton dbSingleton = DBSingleton.getDBInstance();
+        op = new DBOperation(dbSingleton.db_ref, dbSingleton.storage_ref);
         pdfWriter = new PDFGenerator(this);
 
         op.getCategories().addOnCompleteListener(task -> {

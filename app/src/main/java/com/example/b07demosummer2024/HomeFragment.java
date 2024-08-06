@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,48 +38,117 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase db;
     private FirebaseStorage storage;
     private DBOperation op;
-    private boolean passedBySearch = false;
+    private boolean passedItemListBySearch = false;
     private EditText txtKeywordSearch;
     private Display display;
 
-    public HomeFragment() {
+    private boolean isLoggedIn;
+    private Button btnAdd;
+    private Button btnReport;
+    private Button btnView;
+    private Button btnRemove;
+    private Button btnLogin;
+    private ImageButton btnSearchFilter;
 
+    public HomeFragment(boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
     public HomeFragment(List<Item> itemList) {
         this.itemList = itemList;
-        this.passedBySearch = true;
+        this.passedItemListBySearch = true;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home_fragment, container, false);
-        recyclerView = view.findViewById(R.id.mainRecyclerView);
-        ImageButton btnSearchFilter = view.findViewById(R.id.btnSearchFilter);
-        Button btnAdd = view.findViewById(R.id.btnAdd);
-        Button btnReport = view.findViewById(R.id.btnReport);
-        Button btnView = view.findViewById(R.id.btnView);
-        Button btnRemove = view.findViewById(R.id.btnRemove);
-        txtKeywordSearch = view.findViewById(R.id.txtKeywordSearch);
+        getAllViews(view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
-        op = new DBOperation(db.getReference("data"), storage.getReference("/"));
+        DBSingleton dbSingleton = DBSingleton.getDBInstance();
+        op = new DBOperation(dbSingleton.db_ref, dbSingleton.storage_ref);
 
         display = new Display(this);
 
-        if (!this.passedBySearch) {
+        if (!this.passedItemListBySearch) {
             itemList = new ArrayList<>();
         }
+
         itemAdapter = new ItemAdapter(itemList, getContext());
         recyclerView.setAdapter(itemAdapter);
-        if (!this.passedBySearch) {
+
+        if (!this.passedItemListBySearch) {
             op.loadItems(itemList, itemAdapter);
         }
         itemAdapter.notifyDataSetChanged();
+
+        showBasicFunctions(inflater, container, savedInstanceState);
+
+        if (this.isLoggedIn) {
+            showAdminFunctions(view);
+        }
+        else {
+            hideAdminFunctions(view);
+        }
+
+        return view;
+    }
+
+    private void getAllViews(View view) {
+        recyclerView = view.findViewById(R.id.mainRecyclerView);
+        btnSearchFilter = view.findViewById(R.id.btnSearchFilter);
+        btnRemove = view.findViewById(R.id.btnRemove);
+        btnAdd = view.findViewById(R.id.btnAdd);
+        btnReport = view.findViewById(R.id.btnReport);
+        btnView = view.findViewById(R.id.btnView);
+        txtKeywordSearch = view.findViewById(R.id.txtKeywordSearch);
+        btnLogin = view.findViewById(R.id.btnLogin);
+    }
+
+    private void showBasicFunctions(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                                    @Nullable Bundle savedInstanceState) {
+        btnSearchFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new SearchFragment());
+            }
+        });
+
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Item> selected = itemAdapter.getSelected();
+                Remove removeTask = new Remove(selected, op, view);
+                removeTask.remove();
+            }
+        });
+
+        txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                System.out.println(event.getKeyCode() + " " + KeyEvent.KEYCODE_ENTER);
+
+                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
+                    List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
+                    display.displaySearchRes(inflater, container, savedInstanceState, result);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void showAdminFunctions(View view) {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new AddItemFragment());
+            }
+        });
 
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,80 +162,36 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btnSearchFilter.setOnClickListener(new View.OnClickListener() {
+        // In this context, button Login will be changed to button Logout
+        btnLogin.setText("Log Out");
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                loadFragment(new SearchFragment());
-            }
-        });
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragment(new AddItemFragment());
-            }
-        });
-
-        btnRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Item> selected = itemAdapter.getSelected();
-
-                if (selected.isEmpty()) {
-                    displayToast("Please select an item to remove");
-                    return;
-                }
-
-                String ids = "";
-
-                for (int i = 0; i < selected.size(); i++) {
-                    ids += selected.get(i).getLotNumber();
-
-                    if (i < selected.size() - 1) {
-                        ids += ", ";
-                    }
-                }
-
-                AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
-                removePopup.setTitle("Remove Items");
-                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
-                removePopup.setPositiveButton("Yes", (dialog, which) -> {
-                    for (Item item : selected) {
-                        op.removeItem(item).addOnCompleteListener(task -> {
-                           if (task.isSuccessful()) {
-                                op.removeImage(item).addOnCompleteListener(addTask -> {
-                                   if (!addTask.isSuccessful()) {
-                                       displayToast("Removing image failed: Lot Number " + item.getLotNumber());
-                                       return;
-                                   }
-                                });
-                           } else {
-                               displayToast("Removing item failed: Lot Number " + item.getLotNumber());
-                               return;
-                           }
-                        });
-                    }
-
-                    displayToast("Successfully removed " + selected.size() + " items");
+            public void onClick(View view) {
+                AlertDialog.Builder logoutPopup = new AlertDialog.Builder(view.getContext());
+                logoutPopup.setTitle("Logging out");
+                logoutPopup.setMessage("Are you sure you want to log out?");
+                logoutPopup.setPositiveButton("Yes", (dialog, which) -> {
+                    isLoggedIn = false;
+                    hideAdminFunctions(view);
+                    btnLogin.setText("Log In");
                 });
-                removePopup.setNegativeButton("No", null);
-                removePopup.show();
+                logoutPopup.setNegativeButton("No", null);
+                logoutPopup.show();
             }
         });
+    }
 
-        txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    private void hideAdminFunctions(View view) {
+        display.deleteItemFromView(btnAdd);
+        display.deleteItemFromView(btnReport);
+        display.deleteItemFromView(btnRemove);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    List<Item> result = handleKeywordSearch(txtKeywordSearch.getText().toString());
-                    display.displaySearchRes(inflater, container, savedInstanceState, result);
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                loadFragment(new LoginView());
             }
         });
-
-        return view;
     }
 
     private List<Item> handleKeywordSearch(String keyword) {

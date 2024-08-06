@@ -1,26 +1,20 @@
-package com.example.b07demosummer2024;
+package cscb07.taam_project;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,8 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import ui.view.Display;
 
@@ -74,9 +66,8 @@ public class SearchFragment extends Fragment {
         Button btnTop = view.findViewById(R.id.btnTop);
         ImageButton btnSearch = view.findViewById(R.id.btnSearch);
 
-        db = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
-        DatabaseReference ref = db.getReference("/data");
-        op = new DBOperation(ref);
+        DBSingleton dbSingleton = DBSingleton.getDBInstance();
+        op = new DBOperation(dbSingleton.db_ref);
 
         Display display = new Display(this);
         addDropDownValue(view);
@@ -144,11 +135,5 @@ public class SearchFragment extends Fragment {
         };
 
         return view;
-    }
-
-    private void displayInfo(List<Item> l) {
-        for (Item item : l) {
-            System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
-        }
     }
 }
