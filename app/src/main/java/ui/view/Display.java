@@ -12,10 +12,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.b07demosummer2024.HomeFragment;
-import com.example.b07demosummer2024.Item;
-import com.example.b07demosummer2024.ItemAdapter;
-import com.example.b07demosummer2024.R;
+import ui.fragment.HomeFragment;
+import data.database.Item;
+import ui.adapter.ItemAdapter;
+import cscb07.taam_project.R;
 
 import java.util.List;
 
@@ -41,6 +41,12 @@ public class Display {
         for (Item item : l) {
             System.out.println(item.getLotNumber() + " || " + item.getName() + " || " + item.getCategory() + " || " + item.getPeriod());
         }
+    }
+
+    public void deleteItemFromView(View obj) {
+        obj.setEnabled(false);
+        ViewGroup parent = (ViewGroup) obj.getParent();
+        parent.removeView(obj);
     }
 
     private void loadFragment(Fragment fragment) {

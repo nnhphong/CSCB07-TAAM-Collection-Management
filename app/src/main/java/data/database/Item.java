@@ -1,0 +1,64 @@
+package data.database;
+
+import java.util.Objects;
+
+public class Item implements Comparable<Item> {
+    private Integer lot_number;
+    private String name;
+    private String category;
+    private String period;
+    private String description;
+    private String mediaLink;
+    private boolean selected;
+
+    public Item() {
+        lot_number = null;
+        name = "";
+        category = "";
+        period = "";
+        description = "";
+        mediaLink = "";
+        selected = false;
+    }
+
+    public Item(Integer lot_number, String name, String category, String period, String description) {
+        this.lot_number = lot_number;
+        this.name = name;
+        this.category = category;
+        this.period = period;
+        this.description = description;
+    }
+
+    // Getters and setters
+    public Integer getLotNumber() { return this.lot_number; }
+    public void setLotNumber(Integer lot_number) { this.lot_number = lot_number; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    public String getPeriod() { return period; }
+    public void setPeriod(String period) { this.period = period; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getMediaLink() { return mediaLink; }
+    public void setMediaLink(String mediaLink) { this.mediaLink = mediaLink; }
+    public boolean getSelected() { return selected; }
+    public void setSelected(boolean selected) { this.selected = selected; }
+
+    @Override
+    public int compareTo(Item item) {
+        return this.lot_number.compareTo(item.lot_number);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Item item = (Item) obj;
+        return this.hashCode() == item.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(lot_number);
+    }
+}
