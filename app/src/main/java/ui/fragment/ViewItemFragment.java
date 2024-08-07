@@ -1,4 +1,4 @@
-package com.example.b07demosummer2024;
+package ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -26,6 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import cscb07.taam_project.R;
+import data.database.DBOperation;
+import data.database.Item;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +89,7 @@ public class ViewItemFragment extends Fragment {
 
         FirebaseDatabase dbref = FirebaseDatabase.getInstance("https://cscb07-taam-management-default-rtdb.firebaseio.com/");
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://cscb07-taam-management.appspot.com");
-       DBOperation dbOperation = new DBOperation(dbref.getReference("data"), storage.getReference("/"));
+        DBOperation dbOperation = new DBOperation(dbref.getReference("data"), storage.getReference("/"));
 
         dbOperation.getItemData(itemsId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
