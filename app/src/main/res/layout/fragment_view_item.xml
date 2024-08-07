@@ -16,6 +16,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="@string/hello_blank_fragment"
+        android:textAlignment="center"
         android:textColorLink="#7C4DFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +32,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="Lot Number"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +46,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:text="Period"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itemLotNumber" />
@@ -56,6 +59,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="Category"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itemPeriod" />
