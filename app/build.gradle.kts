@@ -29,6 +29,12 @@ android {
     }
 }
 
+androidComponents {
+    onVariants(selector().all()) {
+        it.packaging.resources.excludes.add("mockito-extensions/org.mockito.plugins.MockMaker")
+    }
+}
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -38,6 +44,13 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.ui.graphics.android)
     testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:4.2.0")
+    testImplementation("org.mockito:mockito-inline:4.2.0")
+    testImplementation("com.google.android.gms:play-services-tasks:18.0.1")
+    androidTestImplementation("org.mockito:mockito-android:4.2.0")
+    androidTestImplementation("org.mockito:mockito-core:4.2.0")
+    androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito-inline:2.28.3")
+    androidTestImplementation("com.google.android.gms:play-services-tasks:18.0.1")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     // Import the BoM for the Firebase platform

@@ -21,12 +21,12 @@ public class LoginModel implements Contract.Model {
 
     public LoginModel() {}
 
-    public Task<List<User>> login(String username, String password) {
-        TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
-        List<User> user_list = new ArrayList<>();
+    public Task<User> login(String username, String password) {
+        TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User matched_user = null;
                 for (DataSnapshot users : snapshot.getChildren()) {
                     User user = users.getValue(User.class);
                     if (user == null) {
@@ -40,9 +40,10 @@ public class LoginModel implements Contract.Model {
                             !Objects.equals(user.getPassword(), password)) {
                         continue;
                     }
-                    user_list.add(user);
+                    matched_user = user;
+                    break;
                 }
-                tcs.setResult(user_list);
+                tcs.setResult(matched_user);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
