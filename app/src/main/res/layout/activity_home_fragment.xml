@@ -10,8 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/lato"
         android:text="@string/collection_title"
+        android:textColor="@color/balticsea"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +60,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="View"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
@@ -69,6 +73,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginBottom="16dp"
         android:text="Report"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
@@ -79,6 +84,8 @@
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="16dp"
         android:text="Add"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline" />
 
@@ -90,6 +97,7 @@
         android:backgroundTint="#00FFFFFF"
         android:contentDescription="Button for Search Filter"
         android:scaleType="centerInside"
+        android:tint="@color/balticsea"
         app:layout_constraintBottom_toBottomOf="@+id/txtKeywordSearch"
         app:layout_constraintEnd_toEndOf="@+id/txtKeywordSearch"
         app:layout_constraintTop_toTopOf="@+id/txtKeywordSearch"
@@ -101,6 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Remove"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnView"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -112,6 +121,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="Login"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -189,6 +189,25 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0);
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber;
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+
+                }
+
+            }
+        });
     }
 
     private void showAdminFunctions(View view) {
@@ -201,7 +220,21 @@ public class HomeFragment extends Fragment {
 
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {}
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0);
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber;
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+
+                }
+
+            }
         });
 
         btnReport.setOnClickListener(new View.OnClickListener() {

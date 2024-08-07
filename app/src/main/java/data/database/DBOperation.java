@@ -212,6 +212,24 @@ public class DBOperation {
         });
     }
 
+    public Task<Item> getItemData(String itemId) {
+        TaskCompletionSource<Item> tcs = new TaskCompletionSource<>();
+
+        ref.child(itemId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Item item = snapshot.getValue(Item.class);
+                tcs.setResult(item);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                tcs.setException(error.toException());
+            }
+        });
+        return tcs.getTask();
+    }
+
     public Task<List<User>> login(String username, String password) {
         TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
         List<User> user_list = new ArrayList<>();
