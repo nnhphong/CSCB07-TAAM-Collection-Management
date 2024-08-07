@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:foregroundGravity="center"
     android:foregroundTint="#00FFFFFF"
-    tools:context=".LoginFragment">
+    tools:context=".LoginView">
 
     <EditText
         android:id="@+id/username_input"
