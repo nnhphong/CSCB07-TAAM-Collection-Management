@@ -80,10 +80,12 @@
 
     <ImageButton
         android:id="@+id/btnSearch"
-        android:layout_width="39dp"
-        android:layout_height="38dp"
+        android:layout_width="44dp"
+        android:layout_height="46dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/balticsea"
+        android:tint="@color/laser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/_magnifyingglass" />

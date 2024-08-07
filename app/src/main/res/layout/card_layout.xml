@@ -8,6 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
         android:layout_height="344dp"
+        app:cardBackgroundColor="@color/whiterock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,11 +17,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/whiterock"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="88dp"
+                android:background="@color/whiterock"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -30,21 +33,25 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textAlignment="center"
+                    android:textColor="@color/jumbo"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/itemTextViewName"
                     android:layout_width="204dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato_bold"
                     android:text="Name"
                     android:textAlignment="center"
+                    android:textColor="@color/jumbo"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <CheckBox
                     android:id="@+id/itemCheckBox"
                     android:layout_width="48dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/balticsea" />
 
             </LinearLayout>
 
@@ -63,14 +70,19 @@
                 android:id="@+id/itemTextViewPeriod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lato"
                 android:text="Period"
+                android:textColor="@color/jumbo"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/itemTextViewDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description" />
+                android:background="@color/whiterock"
+                android:fontFamily="@font/lato"
+                android:text="Description"
+                android:textColor="@color/jumbo" />
 
         </LinearLayout>
 

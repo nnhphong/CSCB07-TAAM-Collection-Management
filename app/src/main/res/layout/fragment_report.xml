@@ -119,7 +119,9 @@
         android:layout_width="133dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/balticsea"
         android:text="Create report"
+        android:textColor="@color/laser"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
+        app:layout_constraintGuide_end="395dp" />
 
     <ImageButton
         android:id="@+id/btnTop"
@@ -156,5 +158,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="76dp" />
+        app:layout_constraintGuide_end="335dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

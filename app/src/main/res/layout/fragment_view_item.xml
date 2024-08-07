@@ -13,14 +13,16 @@
         android:id="@+id/itemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment"
-        android:textColorLink="#7C4DFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato_bold"
+        android:text="@string/hello_blank_fragment"
+        android:textColor="@color/jumbo"
+        android:textColorLink="#7C4DFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -30,7 +32,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato_bold"
         android:text="Lot Number"
+        android:textColor="@color/jumbo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +47,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato_bold"
         android:text="Period"
+        android:textColor="@color/jumbo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.085"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +62,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato_bold"
         android:text="Category"
+        android:textColor="@color/jumbo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +74,15 @@
         android:id="@+id/itemDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itemCategory"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato"
+        android:text="Description"
+        android:textColor="@color/jumbo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemCategory" />
 
 
     <ImageView
