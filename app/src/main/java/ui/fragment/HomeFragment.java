@@ -125,6 +125,67 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    // Show a message to the user to select an item first
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0); // Assuming you only want to view one item at a time
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber; // Generate the ID as "id" + lot number
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+                }
+            }
+        });
+
+        txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
+                    Task<List<Item>> tsk = handleKeywordSearch(txtKeywordSearch.getText().toString());
+                    tsk.addOnCompleteListener(new OnCompleteListener<List<Item>>() {
+                        @Override
+                        public void onComplete(@NonNull Task<List<Item>> task) {
+                            List<Item> result = task.getResult();
+                            display.displaySearchRes(inflater, container, savedInstanceState, result);
+                        }
+                    });
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void showAdminFunctions(View view) {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new AddItemFragment());
+            }
+        });
+
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new ReportFragment());
+            }
+        });
+
+        // In this context, button Login will be changed to button Logout
+        btnLogin.setText("Logout");
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Todo: Implement logout function in here
+            }
+        });
+
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,67 +230,6 @@ public class HomeFragment extends Fragment {
                 });
                 removePopup.setNegativeButton("No", null);
                 removePopup.show();
-            }
-        });
-
-        txtKeywordSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == EditorInfo.IME_ACTION_DONE) {
-                    Task<List<Item>> tsk = handleKeywordSearch(txtKeywordSearch.getText().toString());
-                    tsk.addOnCompleteListener(new OnCompleteListener<List<Item>>() {
-                        @Override
-                        public void onComplete(@NonNull Task<List<Item>> task) {
-                            List<Item> result = task.getResult();
-                            display.displaySearchRes(inflater, container, savedInstanceState, result);
-                        }
-                    });
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void showAdminFunctions(View view) {
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragment(new AddItemFragment());
-            }
-        });
-
-        btnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Item> selectedItems = itemAdapter.getSelected();
-                if (selectedItems.isEmpty()) {
-                    // Show a message to the user to select an item first
-                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
-                } else {
-                    Item selectedItem = selectedItems.get(0); // Assuming you only want to view one item at a time
-                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
-                    String itemId = "id" + lotNumber; // Generate the ID as "id" + lot number
-
-                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
-                    loadFragment(fragment);
-                }
-            }
-        });
-
-        btnReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragment(new ReportFragment());
-            }
-        });
-
-        // In this context, button Login will be changed to button Logout
-        btnLogin.setText("Logout");
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Todo: Implement logout function in here
             }
         });
     }
