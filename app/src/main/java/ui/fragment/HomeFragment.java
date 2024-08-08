@@ -231,6 +231,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Todo: Implement logout function in here
+                AlertDialog.Builder logoutPopup = new AlertDialog.Builder(view.getContext());
+                logoutPopup.setTitle("Logging out");
+                logoutPopup.setMessage("Are you sure you want to log out?");
+                logoutPopup.setPositiveButton("Yes", (dialog, which) -> {
+                    isLoggedIn = false;
+                    hideAdminFunctions(view);
+                    btnLogin.setText("Log In");
+                });
+                logoutPopup.setNegativeButton("No", null);
+                logoutPopup.show();
             }
         });
     }

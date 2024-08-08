@@ -13,14 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="24dp"
         android:text="@string/hello_blank_fragment"
         android:textAlignment="center"
         android:textColorLink="#7C4DFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,35 +63,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itemPeriod" />
 
-    <TextView
-        android:id="@+id/itemDescription"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="4dp"
-        android:padding="2dp"
-        android:text="Description"
-        android:textAlignment="center"
-        android:textSize="10sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/itemImage"
+        android:layout_marginTop="200dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itemCategory"
-        app:layout_constraintVertical_bias="0.077" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/itemDescription"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="32dp"
+            android:padding="5dp"
+            android:text="Description"
+            android:textAlignment="viewStart"
+            android:textSize="10sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/itemImage"
-        android:layout_width="151dp"
-        android:layout_height="162dp"
+        android:layout_width="300dp"
+        android:layout_height="230dp"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemDescription"
         tools:src="@tools:sample/avatars" />
 
     <TextView
