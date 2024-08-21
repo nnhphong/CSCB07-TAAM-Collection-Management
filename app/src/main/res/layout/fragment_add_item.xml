@@ -10,9 +10,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="385dp"
+        android:layout_width="0dp"
         android:layout_height="53dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,7 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Item"
+            android:textColor="@color/balticsea"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +51,7 @@
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
+            android:tint="@color/balticsea"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/addItemButton"
             app:layout_constraintTop_toTopOf="parent"
@@ -57,8 +62,9 @@
             android:layout_width="47dp"
             android:layout_height="43dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="#E91D1D"
+            android:backgroundTint="@color/balticsea"
             android:scaleType="centerInside"
+            android:tint="@color/laser"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,9 +74,11 @@
 
     <EditText
         android:id="@+id/lotNumberInput"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="52dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         android:ems="10"
         android:hint="Lot Number"
         android:inputType="number"
@@ -80,9 +88,11 @@
 
     <EditText
         android:id="@+id/descriptionInput"
-        android:layout_width="382dp"
+        android:layout_width="0dp"
         android:layout_height="270dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Description"
@@ -94,9 +104,11 @@
 
     <EditText
         android:id="@+id/nameInput"
-        android:layout_width="381dp"
+        android:layout_width="0dp"
         android:layout_height="52dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="text"
@@ -155,11 +167,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="376dp"
+        android:layout_width="0dp"
         android:layout_height="62dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.448"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameInput">
 
@@ -178,21 +191,25 @@
 
         <AutoCompleteTextView
             android:id="@+id/categoryInputBox"
-            android:layout_width="316dp"
-            android:layout_height="52dp"
+            android:layout_width="315dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="Category"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="375dp"
+        android:layout_width="0dp"
         android:layout_height="63dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.416"
         app:layout_constraintStart_toStartOf="parent"
@@ -214,6 +231,8 @@
             android:id="@+id/periodInputBox"
             android:layout_width="315dp"
             android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="Period"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

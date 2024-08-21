@@ -97,7 +97,7 @@ public class ViewItemFragment extends Fragment {
                 if (item != null) {
                     nameText.setText(item.getName());
                     descriptionText.setText(item.getDescription());
-                    periodText.setText(item.getPeriod());
+//                    periodText.setText(item.getPeriod().replace("\n", "").replace("\r", ""));
                     categoryText.setText(item.getCategory());
                     lotText.setText(String.valueOf(item.getLotNumber()));
 

@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.B07DemoSummer2024" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Primary branding color for the app -->
+        <item name="colorPrimary">@color/balticsea</item>
+
+        <!-- Darker variant of the primary color for the app -->
+        <item name="colorPrimaryVariant">@color/laser</item>
+
+        <!-- Secondary accent color for the app -->
+        <item name="colorAccent">@color/laser</item>
+
+        <!-- Text color on the primary surfaces -->
+        <item name="android:textColorPrimary">@color/balticsea</item>
+
+        <!-- Background color for the app -->
+        <item name="android:colorBackground">@color/whiterock</item>
+
+        <item name="android:fontFamily">@font/lato</item>
+
+    </style>
+
+    <style name="Theme.B07DemoSummer2024" parent="Base.Theme.B07DemoSummer2024" />
+</resources>

@@ -160,6 +160,25 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0);
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber;
+
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
+
+                }
+
+            }
+        });
     }
 
     private void showAdminFunctions(View view) {
@@ -183,6 +202,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Todo: Implement logout function in here
+                AlertDialog.Builder logoutPopup = new AlertDialog.Builder(view.getContext());
+                logoutPopup.setTitle("Logging out");
+                logoutPopup.setMessage("Are you sure you want to log out?");
+                logoutPopup.setPositiveButton("Yes", (dialog, which) -> {
+                    isLoggedIn = false;
+                    hideAdminFunctions(view);
+                    btnLogin.setText("Log In");
+                });
+                logoutPopup.setNegativeButton("No", null);
+                logoutPopup.show();
             }
         });
 

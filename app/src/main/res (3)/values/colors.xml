@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="balticsea">#1D1B1E</color>
+    <color name="laser">#C7A762</color>
+    <color name="jumbo">#838386</color>
+    <color name="whiterock">#EFEBE0</color>
+    <color name="shinglefawn">#6C5336</color>
+</resources>
