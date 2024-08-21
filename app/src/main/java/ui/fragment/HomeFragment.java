@@ -125,50 +125,21 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btnRemove.setOnClickListener(new View.OnClickListener() {
+        btnView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                List<Item> selected = itemAdapter.getSelected();
+            public void onClick(View view) {
+                List<Item> selectedItems = itemAdapter.getSelected();
+                if (selectedItems.isEmpty()) {
+                    // Show a message to the user to select an item first
+                    Toast.makeText(getContext(), "Please select an item first", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item selectedItem = selectedItems.get(0); // Assuming you only want to view one item at a time
+                    String lotNumber = String.valueOf(selectedItem.getLotNumber());
+                    String itemId = "id" + lotNumber; // Generate the ID as "id" + lot number
 
-                if (selected.isEmpty()) {
-                    displayToast("Please select an item to remove");
-                    return;
+                    ViewItemFragment fragment = ViewItemFragment.newInstance(itemId);
+                    loadFragment(fragment);
                 }
-
-                String ids = "";
-
-                for (int i = 0; i < selected.size(); i++) {
-                    ids += selected.get(i).getLotNumber();
-
-                    if (i < selected.size() - 1) {
-                        ids += ", ";
-                    }
-                }
-
-                AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
-                removePopup.setTitle("Remove Items");
-                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
-                removePopup.setPositiveButton("Yes", (dialog, which) -> {
-                    for (Item item : selected) {
-                        op.removeItem(item).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                op.removeImage(item).addOnCompleteListener(addTask -> {
-                                    if (!addTask.isSuccessful()) {
-                                        displayToast("Removing image failed: Lot Number " + item.getLotNumber());
-                                        return;
-                                    }
-                                });
-                            } else {
-                                displayToast("Removing item failed: Lot Number " + item.getLotNumber());
-                                return;
-                            }
-                        });
-                    }
-
-                    displayToast("Successfully removed " + selected.size() + " items");
-                });
-                removePopup.setNegativeButton("No", null);
-                removePopup.show();
             }
         });
 
@@ -241,6 +212,53 @@ public class HomeFragment extends Fragment {
                 });
                 logoutPopup.setNegativeButton("No", null);
                 logoutPopup.show();
+            }
+        });
+
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Item> selected = itemAdapter.getSelected();
+
+                if (selected.isEmpty()) {
+                    displayToast("Please select an item to remove");
+                    return;
+                }
+
+                String ids = "";
+
+                for (int i = 0; i < selected.size(); i++) {
+                    ids += selected.get(i).getLotNumber();
+
+                    if (i < selected.size() - 1) {
+                        ids += ", ";
+                    }
+                }
+
+                AlertDialog.Builder removePopup = new AlertDialog.Builder(getContext());
+                removePopup.setTitle("Remove Items");
+                removePopup.setMessage("Are you sure you want to remove " + selected.size() + " items?\nLot Numbers: " + ids);
+                removePopup.setPositiveButton("Yes", (dialog, which) -> {
+                    for (Item item : selected) {
+                        op.removeItem(item).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                op.removeImage(item).addOnCompleteListener(addTask -> {
+                                    if (!addTask.isSuccessful()) {
+                                        displayToast("Removing image failed: Lot Number " + item.getLotNumber());
+                                        return;
+                                    }
+                                });
+                            } else {
+                                displayToast("Removing item failed: Lot Number " + item.getLotNumber());
+                                return;
+                            }
+                        });
+                    }
+
+                    displayToast("Successfully removed " + selected.size() + " items");
+                });
+                removePopup.setNegativeButton("No", null);
+                removePopup.show();
             }
         });
     }
